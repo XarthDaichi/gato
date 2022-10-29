@@ -1,4 +1,4 @@
-# gato
+# Operacion Gatito
 Proyecto de estructuras de datos
 
 ##Nombres de integrantes
