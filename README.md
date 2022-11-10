@@ -1,5 +1,5 @@
 # Operacion Gatito
-Proyecto de estructuras de datos
+Proyecto 2 - Estructuras de Datos
 
 ## Integrantes
 Diego Quiroz Artiñano \
