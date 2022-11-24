@@ -6,6 +6,7 @@ if __name__ == '__main__':
     speed = [1, 1]
     bg_no_escalado = pygame.image.load("../resources/background.png")
     bg = pygame.transform.scale(bg_no_escalado, (728,728))
+    white = 255, 255, 255
 
     screen = pygame.display.set_mode(size)
 
@@ -22,7 +23,7 @@ if __name__ == '__main__':
         if ballrect.top < 0 or ballrect.bottom > height:
             speed[1] = -speed[1]
 
-        screen.fill(255,255,255)
+        screen.fill(white)
         screen.blit(bg, (0,0))
         screen.blit(ball, ballrect)
         pygame.display.flip()
