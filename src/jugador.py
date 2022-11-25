@@ -18,7 +18,7 @@ class JugadorHumano(Jugador):
     def movida(self, tablero):
         while True:
             posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
-            if tablero[posicionIngresada] is not ' ':
+            if tablero[posicionIngresada] != ' ':
                 print("Posicion ya tiene una letra, volver a ingresar")
             else:
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
@@ -41,30 +41,31 @@ class JugadorCPU(Jugador):
         if self.dificultad is dificultad.Dificultad.facil:
             tableroNuevo = tablero
             for c in tablero:
-                if c is ' ':
+                if c == ' ':
                     movimientoPosible = True
                     break
                 else:
                     movimientoPosible = False
             while True:
                 posicionIngresada = random.randint(0, 8)
-                if tablero[posicionIngresada] is ' ':
+                if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
         if self.dificultad is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
             while True:
-                posicionIngresada = random.randit(0, 8)
-                if tablero[posicionIngresada] is ' ':
+                posicionIngresada = random.randint()(0, 8)
+                if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
         if self.dificultad is dificultad.Dificultad.dificil:
-            if tablero is [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
+            if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada:]
             else:
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
+                self.arbol.cambiarRaizA(tablero)
                 self.arbol.minimax()
-                return self.arbol.raiz.valor
+                tableroNuevo = self.arbol.raiz.valor
         return tableroNuevo

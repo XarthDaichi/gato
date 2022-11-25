@@ -51,9 +51,9 @@ class ArbolDecisiones:
 
     def minimax(self):
         nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
-        for i in range(9):
-            if self.raiz.valor[i] is not nuevoValor[i]:
-                posicionIngresada = i
+        # for i in range(9):
+        #     if self.raiz.valor[i] is not nuevoValor[i]:
+        #         posicionIngresada = i
         self.cambiarRaizA(nuevoValor)
 
     def _minimax(self, tempRaiz, letra):
@@ -88,7 +88,8 @@ class ArbolDecisiones:
             return True
         if tempRaiz is None:
             return False
-        for posibleCambio in tempRaiz.siguientes:
-            if self._cambiarRaizA(posibleCambio, valor):
-                return True
+        if tempRaiz.siguientes is not None:
+            for posibleCambio in tempRaiz.siguientes:
+                if self._cambiarRaizA(posibleCambio, valor):
+                    return True
         return False
