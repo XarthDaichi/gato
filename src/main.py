@@ -52,6 +52,7 @@ if __name__ == '__main__':
         print(tablero[3], ' | ', tablero[4], ' | ', tablero[5])
         print('-----------')
         print(tablero[6], ' | ', tablero[7], ' | ', tablero[8])
+        print(" ")
 
         tablero = CPUfacil.movida(tablero)
         if (determinarGanador(tablero)):

@@ -66,5 +66,5 @@ class JugadorCPU(Jugador):
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
                 self.arbol.minimax()
-                return self.arbol.raiz.valo
+                return self.arbol.raiz.valor
         return tableroNuevo

@@ -70,11 +70,11 @@ class ArbolDecisiones:
         for posibleMovida in tempRaiz.siguientes:
             tempPuntaje = self._minimax(posibleMovida, 'O' if letra is 'X' else 'X')
             if letra is self.letraCPU:
-                if tempPuntaje[0] > mejor:
+                if tempPuntaje[0] > mejor[0]:
                     mejor[0] = tempPuntaje[0]
                     mejor[1] = posibleMovida.valor
             else:
-                if tempPuntaje[0] < mejor:
+                if tempPuntaje[0] < mejor[0]:
                     mejor[0] = tempPuntaje[0]
                     mejor[1] = posibleMovida.valor
         return mejor
