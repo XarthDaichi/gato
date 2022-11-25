@@ -1,13 +1,15 @@
 import dificultad, arbol_decisiones
 import random
 
+
 class Jugador:
-    def __int__(self, nombre, letra):
+    def __init__(self, nombre, letra):
         self.nombre = nombre
         self.letra = letra
 
     def movida(self, tablero):
         pass
+
 
 class JugadorHumano(Jugador):
     def __init__(self, nombre, letra):
@@ -19,9 +21,10 @@ class JugadorHumano(Jugador):
             if tablero[posicionIngresada] is not ' ':
                 print("Posicion ya tiene una letra, volver a ingresar")
             else:
-                tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada+1:]
+                tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                 break
         return tableroNuevo
+
 
 class JugadorCPU(Jugador):
     def __init__(self, letra, dificultadNueva):
@@ -44,19 +47,19 @@ class JugadorCPU(Jugador):
                 else:
                     movimientoPosible = False
             while True:
-                posicionIngresada = random.randit(0,8)
+                posicionIngresada = random.randint(0, 8)
                 if tablero[posicionIngresada] is ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
-        if self.dificultad is dificultad.Dificultad.normal: # TODO modificar dificultad normal para diferenciar entre este y facil
+        if self.dificultad is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
             while True:
-                posicionIngresada = random.randit(0,8)
+                posicionIngresada = random.randit(0, 8)
                 if tablero[posicionIngresada] is ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
         if self.dificultad is dificultad.Dificultad.dificil:
             if tablero is [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
-                posicionIngresada = random.choice([0,2,4,6,8])
+                posicionIngresada = random.choice([0, 2, 4, 6, 8])
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada:]
             else:
                 if self.arbol is None:
@@ -65,4 +68,3 @@ class JugadorCPU(Jugador):
                 self.arbol.minimax()
                 return self.arbol.raiz.valo
         return tableroNuevo
-
