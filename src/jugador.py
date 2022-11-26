@@ -1,4 +1,5 @@
-import dificultad, arbol_decisiones
+from src import dificultad
+from src import arbol_decisiones
 import random
 
 
