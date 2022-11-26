@@ -114,26 +114,31 @@ class JugadorCPU(Jugador):
         tableroNuevo
             Es el tablero actualizado con la jugada incluida
         """
+        tableroNuevo = tablero
         if self.dificultad is dificultad.Dificultad.facil:
-            tableroNuevo = tablero
-            for c in tablero:
-                if c == ' ':
-                    movimientoPosible = True
-                    break
-                else:
-                    movimientoPosible = False
             while True:
                 posicionIngresada = random.randint(0, 8)
                 if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
-        if self.dificultad is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
+        elif self.dificultad is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
             while True:
                 posicionIngresada = random.randint()(0, 8)
                 if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
-        if self.dificultad is dificultad.Dificultad.dificil:
+        elif self.dificultad is dificultad.Dificultad.dificil:
+            if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
+                posicionIngresada = random.choice([0, 2, 4, 6, 8])
+                tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada:]
+            else:
+                if self.arbol is None:
+                    self.arbol = arbol_decisiones.ArbolDecisiones()
+                    self.arbol.generarArbol(self.letra, tablero)
+                self.arbol.cambiarRaizA(tablero)
+                self.arbol.minimax()
+                tableroNuevo = self.arbol.raiz.valor
+        elif self.dificultad is dificultad.Dificultad.imposible:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada:]
