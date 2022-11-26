@@ -3,19 +3,65 @@ import random
 
 
 class Jugador:
+    """
+    Es una superclase para los tipos de jugador existentes
+
+    Atributos
+    ---------
+    nombre:str
+        Es el nombre que el jugador decida
+    letra:str
+        La letra asignada al jugador para colocar en el tablero
+
+    Metodos
+    -------
+    movida(tablero)
+        Es el metodo virtual el cual se sobreescribe en clases hijas
+    """
     def __init__(self, nombre, letra):
         self.nombre = nombre
         self.letra = letra
 
     def movida(self, tablero):
+        """
+        Es el metodo virtual el cual se sobreescribe en clases hijas
+        """
         pass
 
 
 class JugadorHumano(Jugador):
+    """
+    Hereda de la superclase Jugador y se utiliza para un jugador humano
+
+    Atributos
+    ---------
+    nombre:str
+        Es el nombre que el jugador decida
+    letra:str
+        La letra asignada al jugador para colocar en el tablero
+
+    Metodos
+    -------
+    movida(tablero)
+        Recibe la posicion en la cual el jugador quiere colocar su jugada y devuelve el tablero actualizado
+    """
     def __init__(self, nombre, letra):
         super().__init__(nombre, letra)
 
     def movida(self, tablero):
+        """
+        Recibe la posicion en la cual el jugador quiere colocar su jugada y devuelve el tablero actualizado
+
+        Parametros
+        ----------
+        tablero
+            Es el tablero actual del juego antes de la jugada
+
+        Retorna
+        -------
+        tableroNuevo
+            Es el tablero actualizado con la jugada incluida
+        """
         while True:
             posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
             if tablero[posicionIngresada] != ' ':
@@ -27,6 +73,23 @@ class JugadorHumano(Jugador):
 
 
 class JugadorCPU(Jugador):
+    """
+    Hereda de la superclase Jugador y se utiliza para un CPU
+
+    Atributos
+    ---------
+    dificultad:dificultad
+        Es la dificultad elegida por el jugador humano, se saca de la clase enumeradora dificultad
+    nombre:str
+        Se asigna como CPU
+    letra:str
+        La letra asignada al CPU para colocar en el tablero
+
+    Metodos
+    -------
+    movida(tablero)
+        Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
+    """
     def __init__(self, letra, dificultadNueva):
         super().__init__('CPU', letra)
         self.dificultad = dificultadNueva
@@ -38,6 +101,19 @@ class JugadorCPU(Jugador):
         self.arbol = None
 
     def movida(self, tablero):
+        """
+        Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
+
+        Parametros
+        ----------
+        tablero
+            Es el tablero actual del juego antes de la jugada
+
+        Retorna
+        -------
+        tableroNuevo
+            Es el tablero actualizado con la jugada incluida
+        """
         if self.dificultad is dificultad.Dificultad.facil:
             tableroNuevo = tablero
             for c in tablero:
