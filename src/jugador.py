@@ -1,5 +1,5 @@
-from src import dificultad
-from src import arbol_decisiones
+import dificultad
+import arbol_decisiones
 import random
 
 
