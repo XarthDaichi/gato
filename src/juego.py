@@ -10,8 +10,6 @@ class Juego:
         self.tablero = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
         self.turnos = queue.Queue()
 
-        self.comenzar()
-
     def comenzar(self):
         if random.randint(1, 2) == 1:
             self.jugador1.letra = 'X'
@@ -36,7 +34,7 @@ class Juego:
         jugadorDeTurno = self.turnos.get()
         print('Turno de: ', jugadorDeTurno.nombre, '(', jugadorDeTurno.letra, ')')
         self.tablero = jugadorDeTurno.movida(self.tablero)
-
+        # dibujador.Dibujador.dibujaLetra(self.tablero)
         print(self.tablero[0], ' | ', self.tablero[1], ' | ', self.tablero[2])
         print('--------------------')
         print(self.tablero[3], ' | ', self.tablero[4], ' | ', self.tablero[5])

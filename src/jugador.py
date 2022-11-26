@@ -2,7 +2,6 @@ import dificultad
 import arbol_decisiones
 import random
 
-
 class Jugador:
     """
     Es una superclase para los tipos de jugador existentes
@@ -65,6 +64,8 @@ class JugadorHumano(Jugador):
         """
         while True:
             posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
+            # print("Ingrese la posicion que quiere ingresar (0-8): ")
+            # posicionIngresada = dibujador.Dibujador.getPosicion()
             if tablero[posicionIngresada] != ' ':
                 print("Posicion ya tiene una letra, volver a ingresar")
             else:

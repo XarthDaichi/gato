@@ -1,5 +1,8 @@
 import pygame
 import sys
+from src import jugador
+from src import juego
+from src import dificultad
 
 
 class Dibujador:
@@ -22,7 +25,9 @@ class Dibujador:
         pygame.init()
         size = width, height = 728, 728
         bg_no_escalado = pygame.image.load("../resources/backgroundMenu.png")
+        bg_no_escalado_juego = pygame.image.load("../resources/background.png")
         self.bg = pygame.transform.scale(bg_no_escalado, (728, 728))
+        self.bgJuego = pygame.transform.scale(bg_no_escalado_juego, (728, 728))
 
         self.screen = pygame.display.set_mode(size)
         O_no_escalado = pygame.image.load("../resources/O.png")
@@ -59,7 +64,7 @@ class Dibujador:
     #     pygame.draw.rect(shape_surf, color, shape_surf.get_rect())
     #     surface.blit(shape_surf, rect)
 
-    def dibujaLetra(self, letra, posicionTablero):
+    def dibujaLetra(self, tablero):
         """
         Se encarga de dibujar la letra del jugador, X o O en el tablero
 
@@ -70,22 +75,199 @@ class Dibujador:
         posicionTablero:int
             Es donde se vaya a dibujar la letra de acuerdo con coordenadas del tablero
         """
-        letraDibujar = self.O if letra == 'O' else self.X
-        if posicionTablero <= 2:
-            coordy = -7
-        elif posicionTablero <= 5:
-            coordy = 254
-        else:
-            coordy = 497
-        if posicionTablero % 3 == 0:
-            coordx = -7
-        elif posicionTablero % 3 == 1:
-            coordx = 254
-        else:
-            coordx = 497
-        self.screen.blit(letraDibujar, (coordx, coordy))
-        pygame.display.update()
+        for letra in tablero:
+            if letra == 'X':
+                letraDibujar = self.X
+            elif letra == 'O':
+                letraDibujar = self.O
+            else: continue
+            if tablero <= 2:
+                coordy = -7
+            elif tablero <= 5:
+                coordy = 254
+            else:
+                coordy = 497
+            if tablero % 3 == 0:
+                coordx = -7
+            elif tablero % 3 == 1:
+                coordx = 254
+            else:
+                coordx = 497
+            self.screen.blit(letraDibujar, (coordx, coordy))
+            pygame.display.update()
 
+    def pedirNombre(self, objetoRecibidor):
+        font = pygame.font.Font('../resources/yoster.ttf', 32)
+        clock = pygame.time.Clock()
+        input_box = pygame.Rect(100, 100, 300, 40)
+        color_inactive = (150, 108, 68, 238)
+        color_active = (215, 155, 98, 238)
+        color = color_inactive
+        active = False
+        text = ''
+        done = False
+
+        rectParaVerTitulo = pygame.Rect(self.screen.get_width() / 2, self.screen.get_height() / 2, 550, 150)
+        rectParaVerTitulo.center = (self.screen.get_width() / 2, self.screen.get_height() / 2 - 230)
+
+        rectParaVerInstruccion = pygame.Rect(self.screen.get_width() / 2, self.screen.get_height() / 2, 260, 65)
+        rectParaVerInstruccion.center = (self.screen.get_width() / 2, self.screen.get_height() / 2 + 115)
+
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # If the user clicked on the input_box rect.
+                    if input_box.collidepoint(event.pos):
+                        # Toggle the active variable.
+                        active = not active
+                    else:
+                        active = False
+                    # Change the current color of the input box.
+                    color = color_active if active else color_inactive
+                if event.type == pygame.KEYDOWN:
+                    if active:
+                        if event.key == pygame.K_RETURN:
+                            objetoRecibidor.nombre = text
+                            text = ''
+                            return
+                        elif event.key == pygame.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
+
+            self.screen.fill((30, 30, 30))
+            self.screen.blit(self.bg, (0, 0))
+            # Render the current text.
+            txt_surface = font.render(text, True, (0, 0, 0))
+            # Resize the box if the text is too long.
+            width = max(self.screen.get_width() / 2, txt_surface.get_width() + 10)
+            input_box.center = (width, self.screen.get_height() / 2)
+            # Blit the text.
+            self.screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+            # Blit the input_box rect.
+            pygame.draw.rect(self.screen, color, input_box, 2)
+            titulo1 = self.dibujaTexto('Escriba el nombre', self.screen.get_width() / 2, self.screen.get_height() / 2 - 260, 40)
+            titulo2 = self.dibujaTexto('De ' + objetoRecibidor.nombre, self.screen.get_width() / 2, self.screen.get_height() / 2 - 200, 40)
+            instruccion1 = self.dibujaTexto('Presione return ', self.screen.get_width() / 2, self.screen.get_height() / 2 + 100, 20)
+            instruccion2 = self.dibujaTexto('para continuar ', self.screen.get_width() / 2, self.screen.get_height() / 2 + 130, 20)
+            pygame.draw.rect(self.screen, color_inactive, rectParaVerTitulo)
+            pygame.draw.rect(self.screen, color_inactive, rectParaVerInstruccion)
+            self.screen.blit(titulo1[0], titulo1[1])
+            self.screen.blit(titulo2[0], titulo2[1])
+            self.screen.blit(instruccion1[0], instruccion1[1])
+            self.screen.blit(instruccion2[0], instruccion2[1])
+            pygame.display.flip()
+            clock.tick(30)
+
+    def pedirDificultad(self, objetoRecibidor):
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.bg, (0, 0))
+        pygame.display.flip()
+
+        # light shade of the button
+        color_light = (215, 155, 98, 238)
+
+        # dark shade of the button
+        color_dark = (150, 108, 68, 238)
+
+        # stores the width of the
+        # screen into a variable
+        width = self.screen.get_width()
+
+        # stores the height of the
+        # screen into a variable
+        height = self.screen.get_height()
+
+        while True:
+
+            for ev in pygame.event.get():
+
+                if ev.type == pygame.QUIT:
+                    pygame.quit()
+
+                # checks if a mouse is clicked
+                if ev.type == pygame.MOUSEBUTTONDOWN:
+
+                    # if the mouse is clicked on the
+                    # button the game is terminated
+                    if botonfacilwidth - 70 <= mouse[0] <= botonfacilwidth + 70 and botonfacilheight - 20 <= mouse[1] <= botonfacilheight + 20:
+                        objetoRecibidor.dificultad = dificultad.Dificultad.facil
+                        return
+
+                    if botonnormalwidth - 70 <= mouse[0] <= botonnormalwidth + 70 and botonnormalheight - 20 <= mouse[1] <= botonnormalheight + 20:
+                        objetoRecibidor.dificultad = dificultad.Dificultad.normal
+                        return
+
+                    if botondificilwidth - 70 <= mouse[0] <= botondificilwidth + 70 and botondificilheight - 20 <= mouse[1] <= botondificilheight + 20:
+                        objetoRecibidor.dificultad = dificultad.Dificultad.dificil
+                        return
+
+                    if botonimposiblewidth - 70 <= mouse[0] <= botonimposiblewidth + 70 and botonimposibleheight - 20 <= mouse[1] <= botonimposibleheight + 20:
+                        objetoRecibidor.dificultad = dificultad.Dificultad.imposible
+                        return
+            # stores the (x,y) coordinates into
+            # the variable as a tuple
+            mouse = pygame.mouse.get_pos()
+
+            botonfacil = pygame.Rect(width / 2, height / 2, 140, 40)
+            botonfacil.center = (width / 2, height / 2)
+            botonfacilwidth, botonfacilheight = width / 2, height / 2
+
+            botonnormal = pygame.Rect(width / 2, height / 2, 140, 40)
+            botonnormal.center = (width / 2, height / 2 + 80)
+            botonnormalwidth, botonnormalheight = width / 2, height / 2 + 80
+
+            botondificil = pygame.Rect(width / 2, height / 2, 140, 40)
+            botondificil.center = (width / 2, height / 2 + 160)
+            botondificilwidth, botondificilheight = width / 2, height / 2 + 160
+
+            botonimposible = pygame.Rect(width / 2, height / 2, 140, 40)
+            botonimposible.center = (width / 2, height / 2 + 240)
+            botonimposiblewidth, botonimposibleheight = width / 2, height / 2 + 240
+
+            rectParaVerTitulo = pygame.Rect(width / 2, height / 2, 500, 150)
+            rectParaVerTitulo.center = (width / 2, height / 2 - 230)
+            # codigo original (boton de quit)
+            # if mouse is hovered on a button it
+            # changes to lighter shade
+            if botonfacilwidth - 70 <= mouse[0] <= botonfacilwidth + 70 and botonfacilheight - 20 <= mouse[1] <= botonfacilheight + 20:
+                pygame.draw.rect(self.screen, color_light, botonfacil)
+            else:
+                pygame.draw.rect(self.screen, color_dark, botonfacil)
+
+            if botonnormalwidth - 70 <= mouse[0] <= botonnormalwidth + 70 and botonnormalheight - 20 <= mouse[1] <= botonnormalheight + 20:
+                pygame.draw.rect(self.screen, color_light, botonnormal)
+            else:
+                pygame.draw.rect(self.screen, color_dark, botonnormal)
+
+            if botondificilwidth - 70 <= mouse[0] <= botondificilwidth + 70 and botondificilheight - 20 <= mouse[1] <= botondificilheight + 20:
+                pygame.draw.rect(self.screen, color_light, botondificil)
+            else:
+                pygame.draw.rect(self.screen, color_dark, botondificil)
+
+            if botonimposiblewidth - 70 <= mouse[0] <= botonimposiblewidth + 70 and botonimposibleheight - 20 <= mouse[1] <= botonimposibleheight + 20:
+                pygame.draw.rect(self.screen, color_light, botonimposible)
+            else:
+                pygame.draw.rect(self.screen, color_dark, botonimposible)
+
+            titulo1 = self.dibujaTexto('Dificultad', width / 2, height / 2 - 260, 60)
+            titulo2 = self.dibujaTexto('De CPU', width / 2, height / 2 - 200, 60)
+            facil = self.dibujaTexto('facil', width / 2, height / 2, 20)
+            normal = self.dibujaTexto('normal', width / 2, height / 2 + 80, 20)
+            dificil = self.dibujaTexto('dificil', width / 2, height / 2 + 160, 20)
+            imposible = self.dibujaTexto('imposible', width / 2, height / 2 + 240, 20)
+            # superimposing the text onto our button
+            self.screen.blit(facil[0], facil[1])
+            self.screen.blit(normal[0], normal[1])
+            self.screen.blit(dificil[0], dificil[1])
+            self.screen.blit(imposible[0], imposible[1])
+            pygame.draw.rect(self.screen, color_dark, rectParaVerTitulo)
+            self.screen.blit(titulo1[0], titulo1[1])
+            self.screen.blit(titulo2[0], titulo2[1])
+            # updates the frames of the game
+            pygame.display.update()
     # def testWriteSomething(self): example to use the setText function
     #     pygame.init()
     #     window = pygame.display.set_mode((728, 728))
@@ -132,7 +314,7 @@ class Dibujador:
 
                     # if the mouse is clicked on the
                     # button the game is terminated
-                    if botonPvP - 70 <= mouse[0] <= botonPvP + 70 and botonQuitheight - 20 <= mouse[1] <= botonQuitheight + 20:
+                    if botonQuitwidth - 70 <= mouse[0] <= botonQuitwidth + 70 and botonQuitheight - 20 <= mouse[1] <= botonQuitheight + 20:
                         pygame.quit()
 
                     if botonJugarwidth - 70 <= mouse[0] <= botonJugarwidth + 70 and botonJugarheight - 20 <= mouse[1] <= botonJugarheight + 20:
@@ -144,7 +326,7 @@ class Dibujador:
 
             botonQuitRect = pygame.Rect(width / 2, height / 2, 140, 40)
             botonQuitRect.center = (width / 2, height / 2 + 80)
-            botonPvP, botonQuitheight = width / 2, height / 2 + 80
+            botonQuitwidth, botonQuitheight = width / 2, height / 2 + 80
 
             botonJugarRect = pygame.Rect(width / 2, height / 2, 140, 40)
             botonJugarRect.center = (width / 2, height / 2)
@@ -155,7 +337,7 @@ class Dibujador:
             # codigo original (boton de quit)
             # if mouse is hovered on a button it
             # changes to lighter shade
-            if botonPvP - 70 <= mouse[0] <= botonPvP + 70 and botonQuitheight - 20 <= mouse[1] <= botonQuitheight + 20:
+            if botonQuitwidth - 70 <= mouse[0] <= botonQuitwidth + 70 and botonQuitheight - 20 <= mouse[1] <= botonQuitheight + 20:
                 pygame.draw.rect(self.screen, color_light, botonQuitRect)
             else:
                 pygame.draw.rect(self.screen, color_dark, botonQuitRect)
@@ -209,10 +391,26 @@ class Dibujador:
                     # if the mouse is clicked on the
                     # button the game is terminated
                     if botonPvPwidth - 70 <= mouse[0] <= botonPvPwidth + 70 and botonPvPheight - 20 <= mouse[1] <= botonPvPheight + 20:
-                        pass
+                        jugador1 = jugador.JugadorHumano('Jugador 1', ' ')
+                        jugador1.dibujador = self
+                        self.pedirNombre(jugador1)
+                        jugador2 = jugador.JugadorHumano('Jugador 2', ' ')
+                        jugador2.dibujador = self
+                        self.pedirNombre(jugador2)
+                        elJuego = juego.Juego(jugador1, jugador2)
+                        elJuego.dibujador = self
+                        self.Juego(elJuego)
 
                     if botonJvCPUwidth - 70 <= mouse[0] <= botonJvCPUwidth + 70 and botonJvCPUheight - 20 <= mouse[1] <= botonJvCPUheight + 20:
-                        pass
+                        jugador1 = jugador.JugadorHumano('Jugador 1', ' ')
+                        jugador1.dibujador = self
+                        self.pedirNombre(jugador1)
+                        jugador2 = jugador.JugadorCPU('CPU', ' ', dificultad.Dificultad.facil)
+                        self.pedirDificultad(jugador2)
+                        jugador2.dibujador = self
+                        elJuego = juego.Juego(jugador1, jugador2)
+                        elJuego.dibujador = self
+                        self.Juego(elJuego)
 
                     if botonvolverwidth - 70 <= mouse[0] <= botonvolverwidth + 70 and botonvolverheight - 20 <= mouse[1] <= botonvolverheight + 20:
                         self.iniciarMenu()
@@ -239,7 +437,7 @@ class Dibujador:
             # codigo original (boton de quit)
             # if mouse is hovered on a button it
             # changes to lighter shade
-            if botonPvPwidth - 70 <= mouse[0] <= botonPvPwidth + 70 and botonQuitheight - 20 <= mouse[1] <= botonQuitheight + 20:
+            if botonPvPwidth - 70 <= mouse[0] <= botonPvPwidth + 70 and botonPvPheight - 20 <= mouse[1] <= botonPvPheight + 20:
                 pygame.draw.rect(self.screen, color_light, botonPvP)
             else:
                 pygame.draw.rect(self.screen, color_dark, botonPvP)
@@ -267,3 +465,34 @@ class Dibujador:
             self.screen.blit(titulo2[0], titulo2[1])
             # updates the frames of the game
             pygame.display.update()
+
+    def getPosicion(self):
+        while True:
+            for ev in pygame.event.get():
+                if ev.type == pygame.MOUSEBUTTONDOWN:
+                    if -7 <= mouse[0] <= 231 and -7 <= mouse[1] <= 231:
+                        return 0
+                    if 254 <= mouse[0] <= 474 and -7 <= mouse[1] <= 231:
+                        return 1
+                    if 497 <= mouse[0] <= 728 and -7 <= mouse[1] <= 231:
+                        return 2
+                    if -7 <= mouse[0] <= 231 and 254 <= mouse[1] <= 474:
+                        return 3
+                    if 254 <= mouse[0] <= 474 and 254 <= mouse[1] <= 474:
+                        return 4
+                    if 497 <= mouse[0] <= 728 and 254 <= mouse[1] <= 474:
+                        return 5
+                    if -7 <= mouse[0] <= 231 and 497 <= mouse[1] <= 728:
+                        return 6
+                    if 254 <= mouse[0] <= 474 and 497 <= mouse[1] <= 728:
+                        return 7
+                    if 497 <= mouse[0] <= 728 and 497 <= mouse[1] <= 728:
+                        return 8
+            mouse = pygame.mouse.get_pos()
+
+    def Juego(self, juego):
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.bgJuego, (0, 0))
+        pygame.display.flip()
+
+        juego.comenzar()
