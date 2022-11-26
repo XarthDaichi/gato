@@ -64,14 +64,14 @@ class ArbolDecisiones:
     def _determinarGanador(self, valor):
         """Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador"""
         for i in range(0, 9, 3):
-            if valor[i] is not ' ' and valor[i] is valor[i + 1] and valor[i] is valor[i + 2]:
+            if valor[i] != ' ' and valor[i] == valor[i + 1] and valor[i] == valor[i + 2]:
                 return valor[i]
         for i in range(0, 3):
-            if valor[i] != ' ' and valor[i] is valor[i + 3] and valor[i] is valor[i + 6]:
+            if valor[i] != ' ' and valor[i] == valor[i + 3] and valor[i] == valor[i + 6]:
                 return valor[i]
-        if valor[0] != ' ' and valor[0] is valor[4] and valor[0] is valor[8]:
+        if valor[0] != ' ' and valor[0] == valor[4] and valor[0] == valor[8]:
             return valor[0]
-        if valor[2] != ' ' and valor[2] is valor[4] and valor[2] is valor[6]:
+        if valor[2] != ' ' and valor[2] == valor[4] and valor[2] == valor[6]:
             return valor[2]
         return False
 
@@ -102,9 +102,17 @@ class ArbolDecisiones:
         return tempRaiz
 
     def minimax(self):
-        """Es el wrapper del metodo _minimax"""
         nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
         self.cambiarRaizA(nuevoValor)
+        return nuevoValor
+
+    def minimaxSiempreGane(self):
+        nuevoValor = self._minimax(self.raiz, 'X' if self.letraCPU == 'O' else 'O')[1]
+        self.cambiarRaizA(nuevoValor)
+
+    def minimaxImposible(self):
+        nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
+        self.cambiarRaizAImposible(nuevoValor)
 
     def _minimax(self, tempRaiz, letra):
         """Lorem Ipsum"""
@@ -115,12 +123,12 @@ class ArbolDecisiones:
                 for c in tempRaiz.valor:
                     if c == ' ':
                         contador += 1
-                return [1 * (contador) if ganador is self.letraCPU else -1 * (contador), tempRaiz.valor]
+                return [1 * (contador) if ganador == self.letraCPU else -1 * (contador), tempRaiz.valor]
             return [0, tempRaiz.valor]
-        mejor = [-math.inf if letra is self.letraCPU else math.inf, tempRaiz.valor]
+        mejor = [-math.inf if letra == self.letraCPU else math.inf, tempRaiz.valor]
         for posibleMovida in tempRaiz.siguientes:
             tempPuntaje = self._minimax(posibleMovida, 'O' if letra == 'X' else 'X')
-            if letra is self.letraCPU:
+            if letra == self.letraCPU:
                 if tempPuntaje[0] > mejor[0]:
                     mejor[0] = tempPuntaje[0]
                     mejor[1] = posibleMovida.valor
@@ -132,9 +140,20 @@ class ArbolDecisiones:
 
     def cambiarRaizA(self, valor):
         """Es el wrapper del metodo _cambiarRaizA"""
+        self.raiz = self._cambiarRaizA(valor)
+
+    def _cambiarRaizA(self, valor):
+        """Lorem Ipsum"""
+        if self.raiz.siguientes is not None:
+            for posibleCambio in self.raiz.siguientes:
+                if posibleCambio.valor == valor:
+                    return posibleCambio
+
+    def cambiarRaizAImposible(self, valor):
+        """Es el wrapper del metodo _cambiarRaizA"""
         self._cambiarRaizA(self.raiz, valor)
 
-    def _cambiarRaizA(self, tempRaiz, valor):
+    def _cambiarRaizAImposible(self, tempRaiz, valor):
         """Lorem Ipsum"""
         if tempRaiz.valor is valor:
             self.raiz = tempRaiz
