@@ -64,17 +64,17 @@ class JugadorHumano(Jugador):
         tableroNuevo
             Es el tablero actualizado con la jugada incluida
         """
-        while True:
-            # posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
-            # print("Ingrese la posicion que quiere ingresar (0-8): ")
-            # posicionIngresada = dibujador.Dibujador.getPosicion()
-            if tablero[posicionIngresada] != ' ':
-                print("Posicion ya tiene una letra")
-                return tablero
-            else:
-                tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
-                break
-        return tableroNuevo
+        # posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (1-9): "))
+        # print("Ingrese la posicion que quiere ingresar (1-9): ")
+        # posicionIngresada = dibujador.Dibujador.getPosicion()
+        if tablero[posicionIngresada-1] != ' ':
+            print("Posicion ya tiene una letra")
+            return tablero
+        else:
+            tablero[posicionIngresada-1] = self.letra
+            return tablero
+
+
 
 
 class JugadorCPU(Jugador):
