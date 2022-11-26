@@ -1,5 +1,5 @@
-import dificultad
-import arbol_decisiones
+from src import dificultad
+from src import arbol_decisiones
 import random
 
 class Jugador:
@@ -50,7 +50,7 @@ class JugadorHumano(Jugador):
     def __init__(self, nombre="", letra=""):
         super().__init__(nombre, letra)
 
-    def movida(self, tablero):
+    def movida(self, tablero, posicionIngresada):
         """
         Recibe la posicion en la cual el jugador quiere colocar su jugada y devuelve el tablero actualizado
 
@@ -65,11 +65,12 @@ class JugadorHumano(Jugador):
             Es el tablero actualizado con la jugada incluida
         """
         while True:
-            posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
+            # posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
             # print("Ingrese la posicion que quiere ingresar (0-8): ")
             # posicionIngresada = dibujador.Dibujador.getPosicion()
             if tablero[posicionIngresada] != ' ':
-                print("Posicion ya tiene una letra, volver a ingresar")
+                print("Posicion ya tiene una letra")
+                return tablero
             else:
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                 break
@@ -95,12 +96,7 @@ class JugadorCPU(Jugador):
         Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
     """
 
-    def __init__(self, letra="", dificultadNueva=1):
-        super().__init__('CPU', letra)
-        self.dificultad = dificultadNueva
-        self.arbol = None
-
-    def __init__(self, nombre, letra, dificultadNueva):
+    def __init__(self, letra="", dificultadNueva=1, nombre="CPU"):
         super().__init__(nombre, letra)
         self.dificultad = dificultadNueva
         self.arbol = None
