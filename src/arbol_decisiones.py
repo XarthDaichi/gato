@@ -1,3 +1,4 @@
+import math
 class Nodo: # sirve como los posibles estados del tablero para el algoritmo minimax
     def __init__(self, valor):
         self.valor = valor # tablero = [0,1,2,3,4,5,6,7,8]
@@ -10,14 +11,14 @@ class ArbolDecisiones:
 
     def _determinarGanador(self, valor):
         for i in range(0,9,3):
-            if valor[i] is not ' ' and valor[i] is valor[i + 1] and valor[i] is valor[i + 2]:
+            if valor[i] != ' ' and valor[i] is valor[i + 1] and valor[i] is valor[i + 2]:
                 return valor[i]
         for i in range(0, 3):
-            if valor[i] is not ' ' and valor[i] is valor[i + 3] and valor[i] is valor[i + 6]:
+            if valor[i] != ' ' and valor[i] is valor[i + 3] and valor[i] is valor[i + 6]:
                 return valor[i]
-        if valor[0] is not ' ' and valor[0] is valor[4] and valor[0] is valor[8]:
+        if valor[0] != ' ' and valor[0] is valor[4] and valor[0] is valor[8]:
             return valor[0]
-        if valor[2] is not ' ' and valor[2] is valor[4] and valor[2] is valor[6]:
+        if valor[2] != ' ' and valor[2] is valor[4] and valor[2] is valor[6]:
             return valor[2]
         return False
 
@@ -34,7 +35,7 @@ class ArbolDecisiones:
         siguienteValores = []
 
         for i in range(9):
-            if tempRaiz.valor[i] is ' ':
+            if tempRaiz.valor[i] == ' ':
                 tempSiguienteValor = tempRaiz.valor[:i] + [letraIngresada] + tempRaiz.valor[i + 1:]
                 if tempSiguienteValor in siguienteValores:
                     continue
@@ -42,18 +43,11 @@ class ArbolDecisiones:
                     siguienteValores.append(tempSiguienteValor)
                     if tempRaiz.siguientes is None: # en el primero de los casos generar siguientes si es que hay que generarlos
                         tempRaiz.siguientes = []
-                    if letraIngresada is 'O': # cambiar la letra para ver todos las posibles movidas
-                        letra = 'X'
-                    else:
-                        letra = 'O'
-                    tempRaiz.siguientes.append(self._generarArbol(letra,tempSiguienteValor))
+                    tempRaiz.siguientes.append(self._generarArbol('X' if letraIngresada == 'O' else 'O' ,tempSiguienteValor))
         return tempRaiz
 
     def minimax(self):
         nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
-        # for i in range(9):
-        #     if self.raiz.valor[i] is not nuevoValor[i]:
-        #         posicionIngresada = i
         self.cambiarRaizA(nuevoValor)
 
     def _minimax(self, tempRaiz, letra):
@@ -62,13 +56,13 @@ class ArbolDecisiones:
             if ganador is not False:
                 contador = 1
                 for c in tempRaiz.valor:
-                    if c is ' ':
+                    if c == ' ':
                         contador += 1
                 return [1 * (contador) if ganador is self.letraCPU else -1 * (contador), tempRaiz.valor]
             return [0, tempRaiz.valor]
-        mejor = [0, tempRaiz.valor]
+        mejor = [-math.inf if letra is self.letraCPU else math.inf, tempRaiz.valor]
         for posibleMovida in tempRaiz.siguientes:
-            tempPuntaje = self._minimax(posibleMovida, 'O' if letra is 'X' else 'X')
+            tempPuntaje = self._minimax(posibleMovida, 'O' if letra == 'X' else 'X')
             if letra is self.letraCPU:
                 if tempPuntaje[0] > mejor[0]:
                     mejor[0] = tempPuntaje[0]
