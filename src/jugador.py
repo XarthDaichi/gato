@@ -1,7 +1,6 @@
-from src import dificultad
-from src import arbol_decisiones
+import dificultad
+import arbol_decisiones
 import random
-
 
 class Jugador:
     """
@@ -67,6 +66,8 @@ class JugadorHumano(Jugador):
         """
         while True:
             posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (0-8): "))
+            # print("Ingrese la posicion que quiere ingresar (0-8): ")
+            # posicionIngresada = dibujador.Dibujador.getPosicion()
             if tablero[posicionIngresada] != ' ':
                 print("Posicion ya tiene una letra, volver a ingresar")
             else:
@@ -134,14 +135,13 @@ class JugadorCPU(Jugador):
         elif self.dificultad is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
-                tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada:]
+                tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
             else:
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                self.arbol.cambiarRaizA(tablero)
-                self.arbol.minimax()
-                tableroNuevo = self.arbol.raiz.valor
+                else: self.arbol.cambiarRaizA(tablero)
+                tableroNuevo = self.arbol.minimax()
         elif self.dificultad is dificultad.Dificultad.imposible:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
@@ -150,7 +150,7 @@ class JugadorCPU(Jugador):
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                self.arbol.cambiarRaizA(tablero)
-                self.arbol.minimax()
+                else: self.arbol.cambiarRaizAImposible(tablero)
+                self.arbol.minimaxImposible()
                 tableroNuevo = self.arbol.raiz.valor
         return tableroNuevo
