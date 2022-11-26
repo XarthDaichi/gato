@@ -19,7 +19,8 @@ class Jugador:
     movida(tablero)
         Es el metodo virtual el cual se sobreescribe en clases hijas
     """
-    def __init__(self, nombre, letra):
+
+    def __init__(self, nombre="", letra=""):
         self.nombre = nombre
         self.letra = letra
 
@@ -46,7 +47,8 @@ class JugadorHumano(Jugador):
     movida(tablero)
         Recibe la posicion en la cual el jugador quiere colocar su jugada y devuelve el tablero actualizado
     """
-    def __init__(self, nombre, letra):
+
+    def __init__(self, nombre="", letra=""):
         super().__init__(nombre, letra)
 
     def movida(self, tablero):
@@ -91,7 +93,8 @@ class JugadorCPU(Jugador):
     movida(tablero)
         Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
     """
-    def __init__(self, letra, dificultadNueva):
+
+    def __init__(self, letra="", dificultadNueva=1):
         super().__init__('CPU', letra)
         self.dificultad = dificultadNueva
         self.arbol = None
