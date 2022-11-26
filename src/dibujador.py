@@ -1,17 +1,35 @@
-import pygame, sys
+import pygame
+import sys
+
+
 class Dibujador:
+    """
+    Es la clase encargada de generar la interfaz grafica y se implementa usando la libreria PyGame
+
+    Metodos
+    -------
+    dibujaText(string, coordx, coordy, fontSize)
+        Determina el titulo, posicion y tamaño para presentar en la interfaz
+
+    dibujaLetra(letra, posicionTablero)
+        Se encarga de dibujar la letra del jugador, X o O en el tablero
+
+    iniciarMenu()
+        Presenta el menu en la interfaz con sus diferentes opciones
+    """
+
     def __init__(self):
         pygame.init()
-        size = width, height = 728,728
+        size = width, height = 728, 728
         bg_no_escalado = pygame.image.load("../resources/backgroundMenu.png")
-        self.bg = pygame.transform.scale(bg_no_escalado, (728,728))
+        self.bg = pygame.transform.scale(bg_no_escalado, (728, 728))
         white = 255, 255, 255
 
         self.screen = pygame.display.set_mode(size)
         O_no_escalado = pygame.image.load("../resources/O.png")
         X_no_escalado = pygame.image.load("../resources/X.png")
-        self.O = pygame.transform.scale(O_no_escalado, (238,238))
-        self.X = pygame.transform.scale(X_no_escalado, (238,238))
+        self.O = pygame.transform.scale(O_no_escalado, (238, 238))
+        self.X = pygame.transform.scale(X_no_escalado, (238, 238))
 
         while True:
             for event in pygame.event.get():
@@ -20,12 +38,25 @@ class Dibujador:
                     pos = pygame.mouse.get_pos()
 
             self.screen.fill(white)
-            self.screen.blit(self.bg, (0,0))
-            self.startMenu()
+            self.screen.blit(self.bg, (0, 0))
+            self.iniciarMenu()
             pygame.display.flip()
 
-    def setText(self, string, coordx, coordy, fontSize):  # Function to set text
+    def dibujaTexto(self, string, coordx, coordy, fontSize):  # Function to set text
+        """
+        Determina el titulo, posicion y tamaño para presentar en la interfaz
 
+        Parametros
+        ----------
+        string:str
+            Es el titulo a presentar
+        coordx:int
+            Determina la posicion en eje X del string
+        coordy:int
+            Determina la posicion en eje Y del string
+        fontSize:int
+            Determina el tamaño de la fuente del string
+        """
         font = pygame.font.Font('../resources/ka1.ttf', fontSize)
         # (0, 0, 0) is black, to make black text
         text = font.render(string, True, (0, 0, 0))
@@ -33,7 +64,17 @@ class Dibujador:
         textRect.center = (coordx, coordy)
         return (text, textRect)
 
-    def drawLetra(self, letra, posicionTablero):
+    def dibujaLetra(self, letra, posicionTablero):
+        """
+        Se encarga de dibujar la letra del jugador, X o O en el tablero
+
+        Parametros
+        ----------
+        letra:str
+            Es la letra, X o O, para presentar en la interfaz
+        posicionTablero:int
+            Es donde se vaya a dibujar la letra de acuerdo con coordenadas del tablero
+        """
         letraDibujar = self.O if letra == 'O' else self.X
         if posicionTablero <= 2:
             coordy = -7
@@ -62,7 +103,10 @@ class Dibujador:
     #         window.blit(totalText[0], totalText[1])
     #         pygame.display.update()
 
-    def startMenu(self):
+    def iniciarMenu(self):
+        """
+        Presenta el menu en la interfaz con sus diferentes opciones
+        """
         # light shade of the button
         color_light = (170, 170, 170)
 
@@ -104,7 +148,7 @@ class Dibujador:
             else:
                 pygame.draw.rect(self.screen, color_dark, [width / 2, height / 2, 140, 40])
 
-            text = self.setText('quit', width / 2 + 70, height / 2 + 20, 20)
+            text = self.dibujaTexto('quit', width / 2 + 70, height / 2 + 20, 20)
             # superimposing the text onto our button
             self.screen.blit(text[0], text[1])
 
