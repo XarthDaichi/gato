@@ -1,8 +1,6 @@
 import pygame
-import sys
-from src import jugador
-from src import juego
 from src import dificultad
+from gui import instruccion as inst
 
 
 class Dibujador:
@@ -34,8 +32,6 @@ class Dibujador:
         X_no_escalado = pygame.image.load("../resources/X.png")
         self.O = pygame.transform.scale(O_no_escalado, (238, 238))
         self.X = pygame.transform.scale(X_no_escalado, (238, 238))
-
-        self.iniciarMenu()
 
     def dibujaTexto(self, string, coordx, coordy, fontSize):  # Function to set text
         """
@@ -75,28 +71,28 @@ class Dibujador:
         posicionTablero:int
             Es donde se vaya a dibujar la letra de acuerdo con coordenadas del tablero
         """
-        for letra in tablero:
-            if letra == 'X':
+        for i in range(9):
+            if tablero[i] == 'X':
                 letraDibujar = self.X
-            elif letra == 'O':
+            elif tablero[i] == 'O':
                 letraDibujar = self.O
             else: continue
-            if tablero <= 2:
+            if i <= 2:
                 coordy = -7
-            elif tablero <= 5:
+            elif i <= 5:
                 coordy = 254
             else:
                 coordy = 497
-            if tablero % 3 == 0:
+            if i % 3 == 0:
                 coordx = -7
-            elif tablero % 3 == 1:
+            elif i % 3 == 1:
                 coordx = 254
             else:
                 coordx = 497
             self.screen.blit(letraDibujar, (coordx, coordy))
             pygame.display.update()
 
-    def pedirNombre(self, objetoRecibidor):
+    def pedirNombre(self):
         font = pygame.font.Font('../resources/yoster.ttf', 32)
         clock = pygame.time.Clock()
         input_box = pygame.Rect(100, 100, 300, 40)
@@ -129,9 +125,7 @@ class Dibujador:
                 if event.type == pygame.KEYDOWN:
                     if active:
                         if event.key == pygame.K_RETURN:
-                            objetoRecibidor.nombre = text
-                            text = ''
-                            return
+                            return text
                         elif event.key == pygame.K_BACKSPACE:
                             text = text[:-1]
                         else:
@@ -149,7 +143,7 @@ class Dibujador:
             # Blit the input_box rect.
             pygame.draw.rect(self.screen, color, input_box, 2)
             titulo1 = self.dibujaTexto('Escriba el nombre', self.screen.get_width() / 2, self.screen.get_height() / 2 - 260, 40)
-            titulo2 = self.dibujaTexto('De ' + objetoRecibidor.nombre, self.screen.get_width() / 2, self.screen.get_height() / 2 - 200, 40)
+            titulo2 = self.dibujaTexto('Del jugador', self.screen.get_width() / 2, self.screen.get_height() / 2 - 200, 40)
             instruccion1 = self.dibujaTexto('Presione return ', self.screen.get_width() / 2, self.screen.get_height() / 2 + 100, 20)
             instruccion2 = self.dibujaTexto('para continuar ', self.screen.get_width() / 2, self.screen.get_height() / 2 + 130, 20)
             pygame.draw.rect(self.screen, color_inactive, rectParaVerTitulo)
@@ -161,7 +155,7 @@ class Dibujador:
             pygame.display.flip()
             clock.tick(30)
 
-    def pedirDificultad(self, objetoRecibidor):
+    def pedirDificultad(self):
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.bg, (0, 0))
         pygame.display.flip()
@@ -193,20 +187,16 @@ class Dibujador:
                     # if the mouse is clicked on the
                     # button the game is terminated
                     if botonfacilwidth - 70 <= mouse[0] <= botonfacilwidth + 70 and botonfacilheight - 20 <= mouse[1] <= botonfacilheight + 20:
-                        objetoRecibidor.dificultad = dificultad.Dificultad.facil
-                        return
+                        return dificultad.Dificultad.facil
 
                     if botonnormalwidth - 70 <= mouse[0] <= botonnormalwidth + 70 and botonnormalheight - 20 <= mouse[1] <= botonnormalheight + 20:
-                        objetoRecibidor.dificultad = dificultad.Dificultad.normal
-                        return
+                        return dificultad.Dificultad.normal
 
                     if botondificilwidth - 70 <= mouse[0] <= botondificilwidth + 70 and botondificilheight - 20 <= mouse[1] <= botondificilheight + 20:
-                        objetoRecibidor.dificultad = dificultad.Dificultad.dificil
-                        return
+                        return dificultad.Dificultad.dificil
 
                     if botonimposiblewidth - 70 <= mouse[0] <= botonimposiblewidth + 70 and botonimposibleheight - 20 <= mouse[1] <= botonimposibleheight + 20:
-                        objetoRecibidor.dificultad = dificultad.Dificultad.imposible
-                        return
+                        return dificultad.Dificultad.imposible
             # stores the (x,y) coordinates into
             # the variable as a tuple
             mouse = pygame.mouse.get_pos()
@@ -316,9 +306,10 @@ class Dibujador:
                     # button the game is terminated
                     if botonQuitwidth - 70 <= mouse[0] <= botonQuitwidth + 70 and botonQuitheight - 20 <= mouse[1] <= botonQuitheight + 20:
                         pygame.quit()
+                        return inst.Instruccion.quit
 
                     if botonJugarwidth - 70 <= mouse[0] <= botonJugarwidth + 70 and botonJugarheight - 20 <= mouse[1] <= botonJugarheight + 20:
-                        self.seleccionDeJuego()
+                        return inst.Instruccion.seleccionDeModo
 
             # stores the (x,y) coordinates into
             # the variable as a tuple
@@ -391,29 +382,13 @@ class Dibujador:
                     # if the mouse is clicked on the
                     # button the game is terminated
                     if botonPvPwidth - 70 <= mouse[0] <= botonPvPwidth + 70 and botonPvPheight - 20 <= mouse[1] <= botonPvPheight + 20:
-                        jugador1 = jugador.JugadorHumano('Jugador 1', ' ')
-                        jugador1.dibujador = self
-                        self.pedirNombre(jugador1)
-                        jugador2 = jugador.JugadorHumano('Jugador 2', ' ')
-                        jugador2.dibujador = self
-                        self.pedirNombre(jugador2)
-                        elJuego = juego.Juego(jugador1, jugador2)
-                        elJuego.dibujador = self
-                        self.Juego(elJuego)
+                        return inst.Instruccion.pvp
 
                     if botonJvCPUwidth - 70 <= mouse[0] <= botonJvCPUwidth + 70 and botonJvCPUheight - 20 <= mouse[1] <= botonJvCPUheight + 20:
-                        jugador1 = jugador.JugadorHumano('Jugador 1', ' ')
-                        jugador1.dibujador = self
-                        self.pedirNombre(jugador1)
-                        jugador2 = jugador.JugadorCPU('CPU', ' ', dificultad.Dificultad.facil)
-                        self.pedirDificultad(jugador2)
-                        jugador2.dibujador = self
-                        elJuego = juego.Juego(jugador1, jugador2)
-                        elJuego.dibujador = self
-                        self.Juego(elJuego)
+                        return inst.Instruccion.pvc
 
                     if botonvolverwidth - 70 <= mouse[0] <= botonvolverwidth + 70 and botonvolverheight - 20 <= mouse[1] <= botonvolverheight + 20:
-                        self.iniciarMenu()
+                        return inst.Instruccion.volver
 
 
             # stores the (x,y) coordinates into
@@ -471,28 +446,97 @@ class Dibujador:
             for ev in pygame.event.get():
                 if ev.type == pygame.MOUSEBUTTONDOWN:
                     if -7 <= mouse[0] <= 231 and -7 <= mouse[1] <= 231:
-                        return 0
-                    if 254 <= mouse[0] <= 474 and -7 <= mouse[1] <= 231:
                         return 1
-                    if 497 <= mouse[0] <= 728 and -7 <= mouse[1] <= 231:
+                    if 254 <= mouse[0] <= 474 and -7 <= mouse[1] <= 231:
                         return 2
-                    if -7 <= mouse[0] <= 231 and 254 <= mouse[1] <= 474:
+                    if 497 <= mouse[0] <= 728 and -7 <= mouse[1] <= 231:
                         return 3
-                    if 254 <= mouse[0] <= 474 and 254 <= mouse[1] <= 474:
+                    if -7 <= mouse[0] <= 231 and 254 <= mouse[1] <= 474:
                         return 4
-                    if 497 <= mouse[0] <= 728 and 254 <= mouse[1] <= 474:
+                    if 254 <= mouse[0] <= 474 and 254 <= mouse[1] <= 474:
                         return 5
-                    if -7 <= mouse[0] <= 231 and 497 <= mouse[1] <= 728:
+                    if 497 <= mouse[0] <= 728 and 254 <= mouse[1] <= 474:
                         return 6
-                    if 254 <= mouse[0] <= 474 and 497 <= mouse[1] <= 728:
+                    if -7 <= mouse[0] <= 231 and 497 <= mouse[1] <= 728:
                         return 7
-                    if 497 <= mouse[0] <= 728 and 497 <= mouse[1] <= 728:
+                    if 254 <= mouse[0] <= 474 and 497 <= mouse[1] <= 728:
                         return 8
+                    if 497 <= mouse[0] <= 728 and 497 <= mouse[1] <= 728:
+                        return 9
             mouse = pygame.mouse.get_pos()
 
-    def Juego(self, juego):
+    def Juego(self):
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.bgJuego, (0, 0))
         pygame.display.flip()
 
-        juego.comenzar()
+    def terminaJuego(self, ganador):
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.bg, (0, 0))
+        pygame.display.flip()
+
+        # light shade of the button
+        color_light = (215, 155, 98, 238)
+
+        # dark shade of the button
+        color_dark = (150, 108, 68, 238)
+
+        # stores the width of the
+        # screen into a variable
+        width = self.screen.get_width()
+
+        # stores the height of the
+        # screen into a variable
+        height = self.screen.get_height()
+
+        while True:
+
+            for ev in pygame.event.get():
+
+                if ev.type == pygame.QUIT:
+                    pygame.quit()
+
+                # checks if a mouse is clicked
+                if ev.type == pygame.MOUSEBUTTONDOWN:
+
+                    # if the mouse is clicked on the
+                    # button the game is terminated
+
+                    if botonvolverwidth - 70 <= mouse[0] <= botonvolverwidth + 70 and botonvolverheight - 20 <= mouse[
+                        1] <= botonvolverheight + 20:
+                        return inst.Instruccion.volver
+
+            # stores the (x,y) coordinates into
+            # the variable as a tuple
+            mouse = pygame.mouse.get_pos()
+
+            botonvolver = pygame.Rect(width / 2, height / 2, 140, 40)
+            botonvolver.center = (width / 2, height / 2 + 160)
+            botonvolverwidth, botonvolverheight = width / 2, height / 2 + 160
+
+            rectParaVerTitulo = pygame.Rect(width / 2, height / 2, 500, 150)
+            rectParaVerTitulo.center = (width / 2, height / 2 - 30)
+            # codigo original (boton de quit)
+            # if mouse is hovered on a button it
+            # changes to lighter shade
+
+            if botonvolverwidth - 70 <= mouse[0] <= botonvolverwidth + 70 and botonvolverheight - 20 <= mouse[
+                1] <= botonvolverheight + 20:
+                pygame.draw.rect(self.screen, color_light, botonvolver)
+            else:
+                pygame.draw.rect(self.screen, color_dark, botonvolver)
+
+            if ganador is not None:
+                titulo1 = self.dibujaTexto('Gana', width / 2, height / 2 - 60, 60)
+                titulo2 = self.dibujaTexto(ganador.nombre + '!!!', width / 2, height / 2, 60)
+            else:
+                titulo1 = self.dibujaTexto('Empate', width / 2, height / 2 - 60, 60)
+                titulo2 = self.dibujaTexto('!!!', width / 2, height / 2, 60)
+            volver = self.dibujaTexto('volver', width / 2, height / 2 + 160, 20)
+            # superimposing the text onto our button
+            self.screen.blit(volver[0], volver[1])
+            pygame.draw.rect(self.screen, color_dark, rectParaVerTitulo)
+            self.screen.blit(titulo1[0], titulo1[1])
+            self.screen.blit(titulo2[0], titulo2[1])
+            # updates the frames of the game
+            pygame.display.update()

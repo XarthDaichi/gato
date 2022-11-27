@@ -50,6 +50,16 @@ class JugadorHumano(Jugador):
     def __init__(self, nombre="", letra=""):
         super().__init__(nombre, letra)
 
+    # def movida(self, tablero):
+    #     while True:
+    #         posicionIngresada = int(input("Ingrese la posicion que quiere (0-8): "))
+    #
+    #         if tablero[posicionIngresada] != ' ':
+    #             print("Posicion ya tiene una letra")
+    #         else:
+    #             tablero[posicionIngresada-1] = self.letra
+    #             return tablero
+
     def movida(self, tablero, posicionIngresada):
         """
         Recibe la posicion en la cual el jugador quiere colocar su jugada y devuelve el tablero actualizado
@@ -69,10 +79,10 @@ class JugadorHumano(Jugador):
         # posicionIngresada = dibujador.Dibujador.getPosicion()
         if tablero[posicionIngresada-1] != ' ':
             print("Posicion ya tiene una letra")
-            return tablero
+            return False
         else:
             tablero[posicionIngresada-1] = self.letra
-            return tablero
+            return True
 
 
 
@@ -95,10 +105,14 @@ class JugadorCPU(Jugador):
     movida(tablero)
         Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
     """
+    def __init__(self, letra, dificultadNueva):
+        super().__init__('CPU', letra)
+        self.dificultadCPU = dificultadNueva
+        self.arbol = None
 
     def __init__(self, letra="", dificultadNueva=1, nombre="CPU"):
         super().__init__(nombre, letra)
-        self.dificultad = dificultadNueva
+        self.dificultadCPU = dificultadNueva
         self.arbol = None
 
     def movida(self, tablero):
@@ -116,19 +130,19 @@ class JugadorCPU(Jugador):
             Es el tablero actualizado con la jugada incluida
         """
         tableroNuevo = tablero
-        if self.dificultad is dificultad.Dificultad.facil:
+        if self.dificultadCPU is dificultad.Dificultad.facil:
             while True:
                 posicionIngresada = random.randint(0, 8)
                 if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
-        elif self.dificultad is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
+        elif self.dificultadCPU is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
             while True:
                 posicionIngresada = random.randint()(0, 8)
                 if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
-        elif self.dificultad is dificultad.Dificultad.dificil:
+        elif self.dificultadCPU is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
@@ -138,7 +152,7 @@ class JugadorCPU(Jugador):
                     self.arbol.generarArbol(self.letra, tablero)
                 else: self.arbol.cambiarRaizA(tablero)
                 tableroNuevo = self.arbol.minimax()
-        elif self.dificultad is dificultad.Dificultad.imposible:
+        elif self.dificultadCPU is dificultad.Dificultad.imposible:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
                 tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada:]
