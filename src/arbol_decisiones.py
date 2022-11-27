@@ -92,8 +92,8 @@ class ArbolDecisiones:
             en el tablero del juego
 
         tablero[2]
-            Retorna la letra asignada en tablero[2] si este es igual a valor[4] y valor[6], haciendo una diagonal en el
-            tablero del juego
+            Retorna la letra asignada en tablero[2] si este es igual a tablero[4] y tablero[6], haciendo una diagonal
+            en el tablero del juego
 
         False
             Retorna False si ninguna de las condiciones anteriores se cumple
