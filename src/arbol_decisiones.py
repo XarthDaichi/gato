@@ -7,14 +7,15 @@ class Nodo:
 
     Atributos
     ---------
-    valor:list
+    tablero:list
         Es la letra, X o O, asignada a cada espacio del tablero
     
     siguientes:Nodo
         Los siguientes nodos del arbol
     """
-    def __init__(self, valor):
-        self.valor = valor  # tablero = [0,1,2,3,4,5,6,7,8]
+
+    def __init__(self, tablero):
+        self.tablero = tablero  # tablero = [0,1,2,3,4,5,6,7,8]
         self.siguientes = None
 
 
@@ -32,13 +33,13 @@ class ArbolDecisiones:
 
     Metodos
     -------
-    _determinarGanador(valor)
+    _determinarGanador(tablero)
         Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador
 
-    generarArbol(letraCPU, valor)
+    generarArbol(letraCPU, tablero)
         Es el wrapper del metodo _generarArbol
 
-    _generarArbol(letraIngresada, valor)
+    _generarArbol(letraIngresada, tablero)
         Genera arbol de decisiones tomando en cuenta el resultado de funcion _determinarGanador y un tablero dado
 
     minimax()
@@ -54,16 +55,16 @@ class ArbolDecisiones:
         Este metodo es donde se aplica la logica del algoritmo minimax para minimizar la perdida maxima al realizar
         un movimiento
 
-    cambiarRaizA(valor)
+    cambiarRaizA(tablero)
         Es el wrapper del metodo _cambiarRaizA
 
-    _cambiarRaizA(tempRaiz, valor)
+    _cambiarRaizA(tempRaiz, tablero)
         Es un metodo para cambiar la raiz del arbol para no generar el arbol desde cero
 
-    cambiarRaizAImposible(valor)
+    cambiarRaizAImposible(tablero)
         Es el wrapper del metodo _cambiarRaizAImposible
 
-    _cambiarRaizAImposible(tempRaiz, valor)
+    _cambiarRaizAImposible(tempRaiz, tablero)
         Una variacion del metodo cambiarRaizA()
 
     """
@@ -72,49 +73,49 @@ class ArbolDecisiones:
         self.raiz = None
         self.letraCPU = None
 
-    def _determinarGanador(self, valor):
+    def _determinarGanador(self, tablero):
         """
         Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador
 
         Parametros
         ----------
-        valor:list
+        tablero:list
             El tablero del juego
 
         Retorna
         -------
-        valor[i]
-            Retorna valor[i] cuando se tiene la primera linea llena o columna llena
+        tablero[i]
+            Retorna tablero[i] cuando se tiene la primera linea llena o columna llena
 
-        valor[0]
-            Retorna valor[0] si este es igual a valor[4] y valor[8], haciendo una diagonal
+        tablero[0]
+            Retorna tablero[0] si este es igual a tablero[4] y tablero[8], haciendo una diagonal
 
-        valor[2]
-            Retorna valor [2] si este es igual a valor[4] y valor[6], haciendo una diagonal
+        tablero[2]
+            Retorna tablero [2] si este es igual a tablero[4] y tablero[6], haciendo una diagonal
 
         False
             Retorna False si ninguna de las condiciones anteriores se cumple
         """
         for i in range(0, 9, 3):
-            if valor[i] != ' ' and valor[i] == valor[i + 1] and valor[i] == valor[i + 2]:
-                return valor[i]
+            if tablero[i] != ' ' and tablero[i] == tablero[i + 1] and tablero[i] == tablero[i + 2]:
+                return tablero[i]
         for i in range(0, 3):
-            if valor[i] != ' ' and valor[i] == valor[i + 3] and valor[i] == valor[i + 6]:
-                return valor[i]
-        if valor[0] != ' ' and valor[0] == valor[4] and valor[0] == valor[8]:
-            return valor[0]
-        if valor[2] != ' ' and valor[2] == valor[4] and valor[2] == valor[6]:
-            return valor[2]
+            if tablero[i] != ' ' and tablero[i] == tablero[i + 3] and tablero[i] == tablero[i + 6]:
+                return tablero[i]
+        if tablero[0] != ' ' and tablero[0] == tablero[4] and tablero[0] == tablero[8]:
+            return tablero[0]
+        if tablero[2] != ' ' and tablero[2] == tablero[4] and tablero[2] == tablero[6]:
+            return tablero[2]
         return False
 
-    def generarArbol(self, letraCPU, valor):
+    def generarArbol(self, letraCPU, tablero):
         """
         Es el wrapper del metodo _generarArbol
         """
-        self.raiz = self._generarArbol(letraCPU, valor)
+        self.raiz = self._generarArbol(letraCPU, tablero)
         self.letraCPU = letraCPU
 
-    def _generarArbol(self, letraIngresada, valor):
+    def _generarArbol(self, letraIngresada, tablero):
         """
         Genera arbol de decisiones tomando en cuenta el resultado de funcion _determinarGanador y un tablero dado
 
@@ -123,26 +124,27 @@ class ArbolDecisiones:
         letraIngresada:str
             Es la letra que se ingresa por parte del jugador
 
-        valor:list
+        tablero:list
             El tablero del juego
         """
-        tempRaiz = Nodo(valor)
+        tempRaiz = Nodo(tablero)
 
-        if self._determinarGanador(valor) is not False:
+        if self._determinarGanador(tablero) is not False:
             return tempRaiz
 
         siguienteValores = []
 
         for i in range(9):
-            if tempRaiz.valor[i] == ' ':
-                tempSiguienteValor = tempRaiz.valor[:i] + [letraIngresada] + tempRaiz.valor[i + 1:]
+            if tempRaiz.tablero[i] == ' ':
+                tempSiguienteValor = tempRaiz.tablero[:i] + [letraIngresada] + tempRaiz.tablero[i + 1:]
                 if tempSiguienteValor in siguienteValores:
                     continue
                 else:
                     siguienteValores.append(tempSiguienteValor)
-                    if tempRaiz.siguientes is None: # en el primero de los casos generar siguientes si es que hay que generarlos
+                    if tempRaiz.siguientes is None:  # en el primero de los casos generar siguientes si es que hay que generarlos
                         tempRaiz.siguientes = []
-                    tempRaiz.siguientes.append(self._generarArbol('X' if letraIngresada == 'O' else 'O' ,tempSiguienteValor))
+                    tempRaiz.siguientes.append(
+                        self._generarArbol('X' if letraIngresada == 'O' else 'O', tempSiguienteValor))
         return tempRaiz
 
     def minimax(self):
@@ -182,74 +184,74 @@ class ArbolDecisiones:
 
         Retorna
         -------
-        [1 * (contador) if ganador == self.letraCPU else -1 * (contador), tempRaiz.valor]
-            Si existe ganador, si el ganador es CPU devuelve valor positivo, si no valor negativo
+        [1 * (contador) if ganador == self.letraCPU else -1 * (contador), tempRaiz.tablero]
+            Si existe ganador, si el ganador es CPU devuelve tablero positivo, si no tablero negativo
 
-        [0, tempRaiz.valor]
+        [0, tempRaiz.tablero]
             Si no existe ganador
 
         mejor
             Si no se cumple ninguna de las condiciones anteriores, es la mejor movida posible
         """
         if tempRaiz.siguientes is None:
-            ganador = self._determinarGanador(tempRaiz.valor)
+            ganador = self._determinarGanador(tempRaiz.tablero)
             if ganador is not False:
                 contador = 1
-                for c in tempRaiz.valor:
+                for c in tempRaiz.tablero:
                     if c == ' ':
                         contador += 1
-                return [1 * (contador) if ganador == self.letraCPU else -1 * (contador), tempRaiz.valor]
-            return [0, tempRaiz.valor]
-        mejor = [-math.inf if letra == self.letraCPU else math.inf, tempRaiz.valor]
+                return [1 * (contador) if ganador == self.letraCPU else -1 * (contador), tempRaiz.tablero]
+            return [0, tempRaiz.tablero]
+        mejor = [-math.inf if letra == self.letraCPU else math.inf, tempRaiz.tablero]
         for posibleMovida in tempRaiz.siguientes:
             tempPuntaje = self._minimax(posibleMovida, 'O' if letra == 'X' else 'X')
             if letra == self.letraCPU:
                 if tempPuntaje[0] > mejor[0]:
                     mejor[0] = tempPuntaje[0]
-                    mejor[1] = posibleMovida.valor
+                    mejor[1] = posibleMovida.tablero
             else:
                 if tempPuntaje[0] < mejor[0]:
                     mejor[0] = tempPuntaje[0]
-                    mejor[1] = posibleMovida.valor
+                    mejor[1] = posibleMovida.tablero
         return mejor
 
-    def cambiarRaizA(self, valor):
+    def cambiarRaizA(self, tablero):
         """
         Es el wrapper del metodo _cambiarRaizA
         """
-        self.raiz = self._cambiarRaizA(valor)
+        self.raiz = self._cambiarRaizA(tablero)
 
-    def _cambiarRaizA(self, valor):
+    def _cambiarRaizA(self, tablero):
         """
         Es un metodo para cambiar la raiz del arbol para no generar el arbol desde cero
 
         Parametro
         ---------
-        valor:list
+        tablero:list
             El tablero del juego
         """
         if self.raiz.siguientes is not None:
             for posibleCambio in self.raiz.siguientes:
-                if posibleCambio.valor == valor:
+                if posibleCambio.tablero == tablero:
                     return posibleCambio
 
-    def cambiarRaizAImposible(self, valor):
+    def cambiarRaizAImposible(self, tablero):
         """
         Es el wrapper del metodo _cambiarRaizAImposible
         """
-        self._cambiarRaizAImposible(self.raiz, valor)
+        self._cambiarRaizAImposible(self.raiz, tablero)
 
-    def _cambiarRaizAImposible(self, tempRaiz, valor):
+    def _cambiarRaizAImposible(self, tempRaiz, tablero):
         """
         Una variacion del metodo cambiarRaizA()
         """
-        if tempRaiz.valor is valor:
+        if tempRaiz.tablero is tablero:
             self.raiz = tempRaiz
             return True
         if tempRaiz is None:
             return False
         if tempRaiz.siguientes is not None:
             for posibleCambio in tempRaiz.siguientes:
-                if self._cambiarRaizAImposible(posibleCambio, valor):
+                if self._cambiarRaizAImposible(posibleCambio, tablero):
                     return True
         return False
