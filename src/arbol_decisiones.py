@@ -1,6 +1,5 @@
 import math
 
-
 class Nodo:
     """
     Esta clase sirve como los posibles estados del tablero
@@ -233,12 +232,12 @@ class ArbolDecisiones:
         tablero:list
             El tablero del juego
         """
-        if self.raiz.tablero == tablero:
-            return self.raiz
         if self.raiz.siguientes is not None:
             for posibleCambio in self.raiz.siguientes:
                 if posibleCambio.tablero == tablero:
                     return posibleCambio
+
+
 
     def cambiarRaizAImposible(self, tablero):
         """
