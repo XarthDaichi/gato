@@ -61,6 +61,8 @@ class Juego:
                 self.terminarJuego(None)
             else:
                 self.terminarJuego(jugadorDeTurno)
+        else:
+            self.terminarJuego(jugadorDeTurno)
 
 
     def terminarJuego(self, ganador):

@@ -71,6 +71,8 @@ class Dibujador:
         posicionTablero:int
             Es donde se vaya a dibujar la letra de acuerdo con coordenadas del tablero
         """
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.bgJuego, (0, 0))
         for i in range(9):
             if tablero[i] == 'X':
                 letraDibujar = self.X
@@ -90,7 +92,7 @@ class Dibujador:
             else:
                 coordx = 497
             self.screen.blit(letraDibujar, (coordx, coordy))
-            pygame.display.update()
+        pygame.display.flip()
 
     def pedirNombre(self):
         font = pygame.font.Font('../resources/yoster.ttf', 32)
@@ -528,7 +530,7 @@ class Dibujador:
 
             if ganador is not None:
                 titulo1 = self.dibujaTexto('Gana', width / 2, height / 2 - 60, 60)
-                titulo2 = self.dibujaTexto(ganador.nombre + '!!!', width / 2, height / 2, 60)
+                titulo2 = self.dibujaTexto(ganador.nombre + '( ' + ganador.letra + ' )!!!', width / 2, height / 2, 60)
             else:
                 titulo1 = self.dibujaTexto('Empate', width / 2, height / 2 - 60, 60)
                 titulo2 = self.dibujaTexto('!!!', width / 2, height / 2, 60)

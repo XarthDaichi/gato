@@ -234,7 +234,7 @@ class ArbolDecisiones:
 
     def cambiarRaizAImposible(self, valor):
         """Es el wrapper del metodo _cambiarRaizAImposible"""
-        self._cambiarRaizA(self.raiz, valor)
+        self._cambiarRaizAImposible(self.raiz, valor)
 
     def _cambiarRaizAImposible(self, tempRaiz, valor):
         """
@@ -247,6 +247,6 @@ class ArbolDecisiones:
             return False
         if tempRaiz.siguientes is not None:
             for posibleCambio in tempRaiz.siguientes:
-                if self._cambiarRaizA(posibleCambio, valor):
+                if self._cambiarRaizAImposible(posibleCambio, valor):
                     return True
         return False
