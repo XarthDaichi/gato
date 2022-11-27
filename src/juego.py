@@ -1,10 +1,50 @@
-# TODO hacer documentacion
 import random
 import queue
 import jugador
 from gui import dibujador as dib
 
+
 class Juego:
+    """
+    Esta clase de encarga de mantener la funcionalidad del juego, el comienzo, turnos y demas
+
+    Atributos
+    ---------
+    jugador1:Jugador
+        Es el objeto tipo Jugador ya sea para CPU o humano
+
+    jugador2:Jugador
+        Es el objeto tipo Jugador ya sea para CPU o humano
+
+    tablero:list
+        Es el tablero del juego
+
+    turnos:Queue
+        Es donde se almacenan los jugadores para asignarle los turnos
+
+    dibujador:Dibujador
+        Es el encargado de generar la interfaz grafica
+
+    Metodos
+    -------
+    comenzar(jugador1, jugador2)
+        Se encarga de inicializar el juego
+
+    turno()
+        Se encarga de mantener la cola de turnos y ademas utiliza el metodo _determinarGanador() para determinar
+        el ganador del juego, devolviendolo como un objeto
+
+    terminarJuego(ganador)
+        Se encarga de terminar el juego si el objeto ganador es nulo y si no lo es imprime el nombre del jugador
+        ganador
+
+    _determinarGanador()
+        Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador
+
+    _tableroTieneVacios()
+        Verifica si el tablero de juego tiene algun espacio vacio
+    """
+
     def __init__(self, jugador1: jugador.Jugador, jugador2: jugador.Jugador):
         self.jugador1: jugador.Jugador = jugador1
         self.jugador2: jugador.Jugador = jugador2
@@ -13,6 +53,14 @@ class Juego:
         self.dibujador = dib.Dibujador()
 
     def comenzar(self, dibujador):
+        """
+        Se encarga de inicializar el juego
+
+        Parametros
+        ----------
+        dibujador:Dibujador
+            Es el objeto encargado de manejar la interfaz gafica
+        """
         self.dibujador = dibujador
         if random.randint(1, 2) == 1:
             self.jugador1.letra = 'X'
@@ -35,6 +83,10 @@ class Juego:
         self.turno()
 
     def turno(self):
+        """
+        Se encarga de mantener la cola de turnos y ademas utiliza el metodo _determinarGanador() para determinar
+        el ganador del juego, devolviendolo como un objeto
+        """
         jugadorDeTurno = self.turnos.get()
         print('Turno de: ', jugadorDeTurno.nombre, '(', jugadorDeTurno.letra, ')')
         if type(jugadorDeTurno) == jugador.JugadorHumano:
@@ -64,8 +116,16 @@ class Juego:
         else:
             self.terminarJuego(jugadorDeTurno)
 
-
     def terminarJuego(self, ganador):
+        """
+        Se encarga de terminar el juego si el objeto ganador es nulo y si no lo es imprime el nombre del jugador
+        ganador
+
+        Parametros
+        ----------
+        ganador:Jugador
+            Se recibe dentro del metodo turno si existe o no un jugador ganador
+        """
         while not self.turnos.empty():
             self.turnos.get()
 
@@ -76,11 +136,16 @@ class Juego:
             print('Empate!!!!')
 
     def _determinarGanador(self):
+        """
+        Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador
+        """
         for i in range(0, 9, 3):
-            if self.tablero[i] != ' ' and self.tablero[i] is self.tablero[i + 1] and self.tablero[i] is self.tablero[i + 2]:
+            if self.tablero[i] != ' ' and self.tablero[i] is self.tablero[i + 1] and self.tablero[i] is self.tablero[
+                i + 2]:
                 return True
         for i in range(0, 3):
-            if self.tablero[i] != ' ' and self.tablero[i] is self.tablero[i + 3] and self.tablero[i] is self.tablero[i + 6]:
+            if self.tablero[i] != ' ' and self.tablero[i] is self.tablero[i + 3] and self.tablero[i] is self.tablero[
+                i + 6]:
                 return True
         if self.tablero[0] != ' ' and self.tablero[0] is self.tablero[4] and self.tablero[0] is self.tablero[8]:
             return True
@@ -89,6 +154,9 @@ class Juego:
         return False
 
     def _tableroTieneVacios(self):
+        """
+        Verifica si el tablero de juego tiene algun espacio vacio
+        """
         for i in range(9):
             if self.tablero[i] == ' ':
                 return True

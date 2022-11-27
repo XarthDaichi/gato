@@ -1,5 +1,4 @@
 import math
-# TODO documentacion incompleta, terminar
 
 
 class Nodo:
@@ -215,7 +214,9 @@ class ArbolDecisiones:
         return mejor
 
     def cambiarRaizA(self, valor):
-        """Es el wrapper del metodo _cambiarRaizA"""
+        """
+        Es el wrapper del metodo _cambiarRaizA
+        """
         self.raiz = self._cambiarRaizA(valor)
 
     def _cambiarRaizA(self, valor):
@@ -233,7 +234,9 @@ class ArbolDecisiones:
                     return posibleCambio
 
     def cambiarRaizAImposible(self, valor):
-        """Es el wrapper del metodo _cambiarRaizAImposible"""
+        """
+        Es el wrapper del metodo _cambiarRaizAImposible
+        """
         self._cambiarRaizAImposible(self.raiz, valor)
 
     def _cambiarRaizAImposible(self, tempRaiz, valor):
