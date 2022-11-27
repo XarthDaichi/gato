@@ -136,12 +136,20 @@ class JugadorCPU(Jugador):
                 if tablero[posicionIngresada] == ' ':
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
-        elif self.dificultadCPU is dificultad.Dificultad.normal:  # TODO modificar dificultad normal para diferenciar entre este y facil
-            while True:
-                posicionIngresada = random.randint()(0, 8)
-                if tablero[posicionIngresada] == ' ':
-                    tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
-                    break
+        elif self.dificultadCPU is dificultad.Dificultad.normal:
+            if random.randint(1,2) == 1:
+                while True:
+                    posicionIngresada = random.randint(0, 8)
+                    if tablero[posicionIngresada] == ' ':
+                        tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
+                        break
+                else:
+                    if self.arbol is None:
+                        self.arbol = arbol_decisiones.ArbolDecisiones()
+                        self.arbol.generarArbol(self.letra, tablero)
+                    else:
+                        self.arbol.cambiarRaizA(tablero)
+                    tableroNuevo = self.arbol.minimax()
         elif self.dificultadCPU is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
