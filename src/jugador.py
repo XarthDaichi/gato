@@ -10,6 +10,7 @@ class Jugador:
     ---------
     nombre:str
         Es el nombre que el jugador decida
+
     letra:str
         La letra asignada al jugador para colocar en el tablero
 
@@ -26,6 +27,11 @@ class Jugador:
     def movida(self, tablero):
         """
         Es el metodo virtual el cual se sobreescribe en clases hijas
+
+        Parametros
+        ----------
+        tablero:list
+            Es el tablero actual antes de la jugada
         """
         pass
 
@@ -38,12 +44,13 @@ class JugadorHumano(Jugador):
     ---------
     nombre:str
         Es el nombre que el jugador decida
+
     letra:str
         La letra asignada al jugador para colocar en el tablero
 
     Metodos
     -------
-    movida(tablero)
+    movida(tablero, posicionIngresada)
         Recibe la posicion en la cual el jugador quiere colocar su jugada y devuelve el tablero actualizado
     """
 
@@ -66,8 +73,11 @@ class JugadorHumano(Jugador):
 
         Parametros
         ----------
-        tablero
-            Es el tablero actual del juego antes de la jugada
+        tablero:list
+            Es el tablero actual antes de la jugada
+
+        posicionIngresada:int
+            Es la posicion escogida por el jugador para colocar su letra (X o O)
 
         Retorna
         -------
@@ -95,8 +105,10 @@ class JugadorCPU(Jugador):
     ---------
     dificultad:dificultad
         Es la dificultad elegida por el jugador humano, se saca de la clase enumeradora dificultad
+
     nombre:str
         Se asigna como CPU
+
     letra:str
         La letra asignada al CPU para colocar en el tablero
 
@@ -122,7 +134,7 @@ class JugadorCPU(Jugador):
         Parametros
         ----------
         tablero
-            Es el tablero actual del juego antes de la jugada
+            Es el tablero actual antes de la jugada
 
         Retorna
         -------
@@ -143,13 +155,13 @@ class JugadorCPU(Jugador):
                     if tablero[posicionIngresada] == ' ':
                         tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                         break
+            else:
+                if self.arbol is None:
+                    self.arbol = arbol_decisiones.ArbolDecisiones()
+                    self.arbol.generarArbol(self.letra, tablero)
                 else:
-                    if self.arbol is None:
-                        self.arbol = arbol_decisiones.ArbolDecisiones()
-                        self.arbol.generarArbol(self.letra, tablero)
-                    else:
-                        self.arbol.cambiarRaizA(tablero)
-                    tableroNuevo = self.arbol.minimax()
+                    self.arbol.cambiarRaizA(tablero)
+                tableroNuevo = self.arbol.minimax()
         elif self.dificultadCPU is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])

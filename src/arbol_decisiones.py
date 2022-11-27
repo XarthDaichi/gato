@@ -4,33 +4,32 @@ import math
 
 class Nodo:
     """
-    Esta clase sirve como los posibles estados del tablero para el algoritmo minimax
+    Esta clase sirve como los posibles estados del tablero
 
     Atributos
     ---------
     valor:list
-
+        Es la letra, X o O, asignada a cada espacio del tablero
+    
     siguientes:Nodo
-    """ # sirve como los posibles estados del tablero para el algoritmo minimax
+        Los siguientes nodos del arbol
+    """
     def __init__(self, valor):
-        """
-        Parametros
-        ----------
-        valor:
-
-        """
         self.valor = valor  # tablero = [0,1,2,3,4,5,6,7,8]
         self.siguientes = None
 
 
 class ArbolDecisiones:
     """
-    Esta clase crea el arbol de decisiones para los juegadores CPU
+    Esta clase crea el arbol de decisiones para los jugadores CPU
 
     Atributos
     ---------
     raiz:nodo
+        Un nodo con valor X o O dependiendo del arbol a generar
+
     letraCPU:str
+        Es la letra asignada al CPU, sea X o O
 
     Metodos
     -------
@@ -46,20 +45,27 @@ class ArbolDecisiones:
     minimax()
         Es el wrapper del metodo _minimax
 
+    minimaxSiempreGane()
+        Una implementacion del minimax donde siempre gana CPU
+
+    minimaxImposible()
+        Una implementacion del minimax donde el comportamiento del CPU es... especial...
+
     _minimax(tempRaiz, letra)
-        Lorem Ipsum
+        Este metodo es donde se aplica la logica del algoritmo minimax para minimizar la perdida maxima al realizar
+        un movimiento
 
     cambiarRaizA(valor)
         Es el wrapper del metodo _cambiarRaizA
 
     _cambiarRaizA(tempRaiz, valor)
-        Lorem Ipsum
+        Es un metodo para cambiar la raiz del arbol para no generar el arbol desde cero
 
     cambiarRaizAImposible(valor)
         Es el wrapper del metodo _cambiarRaizAImposible
 
     _cambiarRaizAImposible(tempRaiz, valor)
-        Lorem Ipsum
+        Una variacion del metodo cambiarRaizA()
 
     """
 
@@ -73,12 +79,13 @@ class ArbolDecisiones:
 
         Parametros
         ----------
-        valor:str
+        valor:list
+            El tablero del juego
 
         Retorna
         -------
         valor[i]
-            Retorna valor[i] cuando ...
+            Retorna valor[i] cuando se tiene la primera linea llena o columna llena
 
         valor[0]
             Retorna valor[0] si este es igual a valor[4] y valor[8], haciendo una diagonal
@@ -117,8 +124,8 @@ class ArbolDecisiones:
         letraIngresada:str
             Es la letra que se ingresa por parte del jugador
 
-        valor:
-
+        valor:list
+            El tablero del juego
         """
         tempRaiz = Nodo(valor)
 
@@ -148,25 +155,42 @@ class ArbolDecisiones:
         return nuevoValor
 
     def minimaxSiempreGane(self):
+        """
+        Una implementacion del minimax donde siempre gana CPU
+        """
         nuevoValor = self._minimax(self.raiz, 'X' if self.letraCPU == 'O' else 'O')[1]
         self.cambiarRaizA(nuevoValor)
 
     def minimaxImposible(self):
+        """
+        Una implementacion del minimax donde el comportamiento del CPU es... especial...
+        """
         nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
         self.cambiarRaizAImposible(nuevoValor)
 
     def _minimax(self, tempRaiz, letra):
         """
-        Este metodo es donde se aplica la logica del algoritmo minimax para determinar la jugada con mayor o menor
-        posibilidad de ganar
+        Este metodo es donde se aplica la logica del algoritmo minimax para minimizar la perdida maxima al realizar
+        un movimiento
 
         Parametros
         ----------
-        tempRaiz:
-            Lorem
+        tempRaiz:nodo
+            Es el nodo del tablero del arbol en que se encuentre la iteracion del minimax
 
         letra:str
+            Es la letra asignada al CPU, X o O
 
+        Retorna
+        -------
+        [1 * (contador) if ganador == self.letraCPU else -1 * (contador), tempRaiz.valor]
+            Si existe ganador, si el ganador es CPU devuelve valor positivo, si no valor negativo
+
+        [0, tempRaiz.valor]
+            Si no existe ganador
+
+        mejor
+            Si no se cumple ninguna de las condiciones anteriores, es la mejor movida posible
         """
         if tempRaiz.siguientes is None:
             ganador = self._determinarGanador(tempRaiz.valor)
@@ -195,7 +219,14 @@ class ArbolDecisiones:
         self.raiz = self._cambiarRaizA(valor)
 
     def _cambiarRaizA(self, valor):
-        """Lorem Ipsum"""
+        """
+        Es un metodo para cambiar la raiz del arbol para no generar el arbol desde cero
+
+        Parametro
+        ---------
+        valor:list
+            El tablero del juego
+        """
         if self.raiz.siguientes is not None:
             for posibleCambio in self.raiz.siguientes:
                 if posibleCambio.valor == valor:
@@ -206,7 +237,9 @@ class ArbolDecisiones:
         self._cambiarRaizA(self.raiz, valor)
 
     def _cambiarRaizAImposible(self, tempRaiz, valor):
-        """Lorem Ipsum"""
+        """
+        Una variacion del metodo cambiarRaizA()
+        """
         if tempRaiz.valor is valor:
             self.raiz = tempRaiz
             return True
