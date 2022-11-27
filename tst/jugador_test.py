@@ -26,7 +26,7 @@ class JugadorCpuTestCase(unittest.TestCase):
         jugadorTest = jugador.JugadorCPU("X", 1)
         self.assertEqual("CPU", jugadorTest.nombre)
         self.assertEqual("X", jugadorTest.letra)
-        self.assertEqual(1, jugadorTest.dificultad)
+        self.assertEqual(1, jugadorTest.dificultadCPU)
 
 
 if __name__ == '__main__':
