@@ -160,7 +160,7 @@ class JugadorCPU(Jugador):
                         tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                         JugadorCPU.contadorParaNormal += 1
                         if self.arbol is not None:
-                            self.arbol.cambiarRaizA(tablero)
+                            self.arbol.cambiarRaizA(tableroNuevo)
                         break
             else:
                 if self.arbol is None:
