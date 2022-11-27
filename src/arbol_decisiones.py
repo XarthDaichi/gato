@@ -85,13 +85,16 @@ class ArbolDecisiones:
         Retorna
         -------
         tablero[i]
-            Retorna tablero[i] cuando se tiene la primera linea llena o columna llena
+            Retorna la letra asignada en tablero[i] cuando se tiene la primera linea llena o columna llena
+            dentro del tablero de juego
 
         tablero[0]
-            Retorna tablero[0] si este es igual a tablero[4] y tablero[8], haciendo una diagonal
+            Retorna la letra asignada en tablero[0] si este es igual a tablero[4] y tablero[8], haciendo una diagonal
+            en el tablero del juego
 
         tablero[2]
-            Retorna tablero [2] si este es igual a tablero[4] y tablero[6], haciendo una diagonal
+            Retorna la letra asignada en tablero[2] si este es igual a valor[4] y valor[6], haciendo una diagonal en el
+            tablero del juego
 
         False
             Retorna False si ninguna de las condiciones anteriores se cumple
