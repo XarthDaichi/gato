@@ -149,6 +149,8 @@ class JugadorCPU(Jugador):
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
         elif self.dificultadCPU is dificultad.Dificultad.normal:
+            if self.arbol is not None:
+                self.arbol.cambiarRaizA(tablero)
             if random.randint(1,2) == 1:
                 while True:
                     posicionIngresada = random.randint(0, 8)
@@ -159,8 +161,6 @@ class JugadorCPU(Jugador):
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                else:
-                    self.arbol.cambiarRaizA(tablero)
                 tableroNuevo = self.arbol.minimax()
         elif self.dificultadCPU is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
