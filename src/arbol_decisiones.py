@@ -55,6 +55,12 @@ class ArbolDecisiones:
     _cambiarRaizA(tempRaiz, valor)
         Lorem Ipsum
 
+    cambiarRaizAImposible(valor)
+        Es el wrapper del metodo _cambiarRaizAImposible
+
+    _cambiarRaizAImposible(tempRaiz, valor)
+        Lorem Ipsum
+
     """
 
     def __int__(self):
@@ -62,7 +68,27 @@ class ArbolDecisiones:
         self.letraCPU = None
 
     def _determinarGanador(self, valor):
-        """Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador"""
+        """
+        Determina si exite un ganador, si no existe returna False, si existe deveulve la letra (X o O) del ganador
+
+        Parametros
+        ----------
+        valor:str
+
+        Retorna
+        -------
+        valor[i]
+            Retorna valor[i] cuando ...
+
+        valor[0]
+            Retorna valor[0] si este es igual a valor[4] y valor[8], haciendo una diagonal
+
+        valor[2]
+            Retorna valor [2] si este es igual a valor[4] y valor[6], haciendo una diagonal
+
+        False
+            Retorna False si ninguna de las condiciones anteriores se cumple
+        """
         for i in range(0, 9, 3):
             if valor[i] != ' ' and valor[i] == valor[i + 1] and valor[i] == valor[i + 2]:
                 return valor[i]
@@ -76,12 +102,24 @@ class ArbolDecisiones:
         return False
 
     def generarArbol(self, letraCPU, valor):
-        """Es el wrapper del metodo _generarArbol"""
+        """
+        Es el wrapper del metodo _generarArbol
+        """
         self.raiz = self._generarArbol(letraCPU, valor)
         self.letraCPU = letraCPU
 
     def _generarArbol(self, letraIngresada, valor):
-        """Genera arbol de decisiones tomando en cuenta el resultado de funcion _determinarGanador y un tablero dado"""
+        """
+        Genera arbol de decisiones tomando en cuenta el resultado de funcion _determinarGanador y un tablero dado
+
+        Parametros
+        ----------
+        letraIngresada:str
+            Es la letra que se ingresa por parte del jugador
+
+        valor:
+
+        """
         tempRaiz = Nodo(valor)
 
         if self._determinarGanador(valor) is not False:
@@ -102,6 +140,9 @@ class ArbolDecisiones:
         return tempRaiz
 
     def minimax(self):
+        """
+        Es el wrapper del metodo _minimax
+        """
         nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
         self.cambiarRaizA(nuevoValor)
         return nuevoValor
@@ -115,7 +156,18 @@ class ArbolDecisiones:
         self.cambiarRaizAImposible(nuevoValor)
 
     def _minimax(self, tempRaiz, letra):
-        """Lorem Ipsum"""
+        """
+        Este metodo es donde se aplica la logica del algoritmo minimax para determinar la jugada con mayor o menor
+        posibilidad de ganar
+
+        Parametros
+        ----------
+        tempRaiz:
+            Lorem
+
+        letra:str
+
+        """
         if tempRaiz.siguientes is None:
             ganador = self._determinarGanador(tempRaiz.valor)
             if ganador is not False:
@@ -150,7 +202,7 @@ class ArbolDecisiones:
                     return posibleCambio
 
     def cambiarRaizAImposible(self, valor):
-        """Es el wrapper del metodo _cambiarRaizA"""
+        """Es el wrapper del metodo _cambiarRaizAImposible"""
         self._cambiarRaizA(self.raiz, valor)
 
     def _cambiarRaizAImposible(self, tempRaiz, valor):
