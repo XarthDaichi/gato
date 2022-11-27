@@ -9,14 +9,32 @@ class Dibujador:
 
     Metodos
     -------
-    dibujaText(string, coordx, coordy, fontSize)
+    dibujaTexto(string, coordx, coordy, fontSize)
         Determina el titulo, posicion y tamaño para presentar en la interfaz
 
-    dibujaLetra(letra, posicionTablero)
+    dibujaLetra(tablero)
         Se encarga de dibujar la letra del jugador, X o O en el tablero
+
+    pedirNombre()
+        Presenta en la interfaz la pantalla para que el jugador digite su nombre
+
+    pedirDificultad()
+        Presenta la seleccion de dificultad del CPU por medio de botones al usuario cuando se elige jugar contra CPU
 
     iniciarMenu()
         Presenta el menu en la interfaz con sus diferentes opciones
+
+    seleccionDeJuego()
+        Presenta la seleccion de modo de juego por medio de botones al usuario
+
+    getPosicion()
+        Toma la posicion del click que realiza el usuario para colocar su letra (X o O) en el lugar elegido
+
+    Juego()
+        Inicia la interfaz del juego
+
+    terminaJuego(ganador)
+        Presenta la pantalla de ganador con el nombre del jugador que gano la partida
     """
 
     def __init__(self):
@@ -66,11 +84,11 @@ class Dibujador:
 
         Parametros
         ----------
-        letra:str
-            Es la letra, X o O, para presentar en la interfaz
-        posicionTablero:int
-            Es donde se vaya a dibujar la letra de acuerdo con coordenadas del tablero
+        tablero:list
+            Se recibe el tablero actual del juego
         """
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.bgJuego, (0, 0))
         for i in range(9):
             if tablero[i] == 'X':
                 letraDibujar = self.X
@@ -90,9 +108,12 @@ class Dibujador:
             else:
                 coordx = 497
             self.screen.blit(letraDibujar, (coordx, coordy))
-            pygame.display.update()
+        pygame.display.flip()
 
     def pedirNombre(self):
+        """
+        Presenta en la interfaz la pantalla para que el jugador digite su nombre
+        """
         font = pygame.font.Font('../resources/yoster.ttf', 32)
         clock = pygame.time.Clock()
         input_box = pygame.Rect(100, 100, 300, 40)
@@ -156,6 +177,9 @@ class Dibujador:
             clock.tick(30)
 
     def pedirDificultad(self):
+        """
+        Presenta la seleccion de dificultad del CPU por medio de botones al usuario cuando se elige jugar contra CPU
+        """
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.bg, (0, 0))
         pygame.display.flip()
@@ -351,6 +375,9 @@ class Dibujador:
             pygame.display.update()
 
     def seleccionDeJuego(self):
+        """
+        Presenta la seleccion de modo de juego por medio de botones al usuario
+        """
         self.screen.fill((0,0,0))
         self.screen.blit(self.bg, (0, 0))
         pygame.display.flip()
@@ -442,6 +469,9 @@ class Dibujador:
             pygame.display.update()
 
     def getPosicion(self):
+        """
+        Toma la posicion del click que realiza el usuario para colocar su letra (X o O) en el lugar elegido
+        """
         while True:
             for ev in pygame.event.get():
                 if ev.type == pygame.MOUSEBUTTONDOWN:
@@ -466,11 +496,22 @@ class Dibujador:
             mouse = pygame.mouse.get_pos()
 
     def Juego(self):
+        """
+        Inicia la interfaz del juego
+        """
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.bgJuego, (0, 0))
         pygame.display.flip()
 
     def terminaJuego(self, ganador):
+        """
+        Presenta la pantalla de ganador con el nombre del jugador que gano la partida
+
+        Parametros
+        ----------
+        ganador:Jugador
+            Se recibe cuando la clase Juego invoca el metodo para presentar el nombre del ganador
+        """
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.bg, (0, 0))
         pygame.display.flip()
@@ -528,7 +569,7 @@ class Dibujador:
 
             if ganador is not None:
                 titulo1 = self.dibujaTexto('Gana', width / 2, height / 2 - 60, 60)
-                titulo2 = self.dibujaTexto(ganador.nombre + '!!!', width / 2, height / 2, 60)
+                titulo2 = self.dibujaTexto(ganador.nombre + '( ' + ganador.letra + ' )!!!', width / 2, height / 2, 60)
             else:
                 titulo1 = self.dibujaTexto('Empate', width / 2, height / 2 - 60, 60)
                 titulo2 = self.dibujaTexto('!!!', width / 2, height / 2, 60)

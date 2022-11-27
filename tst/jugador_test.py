@@ -3,7 +3,21 @@ from src import jugador
 
 
 class JugadorHumanoTestCase(unittest.TestCase):
+    """
+    Este case son pruebas para Jugador de tipo Humano
+
+    Tests
+    -----
+    test_constructor()
+        Se prueba que la construccion de un jugador humano funcione bien asignandole valores especificos
+
+    test_movida()
+        Se prueba que el movimiento realizado por el jugador humano se coloque bien en el tablero
+    """
     def test_constructor(self):
+        """
+        Se prueba que la construccion de un jugador humano funcione bien asignandole valores especificos
+        """
         jugadorTest = jugador.JugadorHumano("Juan", 'X')
         jugadorTest2 = jugador.JugadorHumano()
 
@@ -13,6 +27,9 @@ class JugadorHumanoTestCase(unittest.TestCase):
         self.assertEqual("", jugadorTest2.letra)
 
     def test_movida(self):
+        """
+        Se prueba que el movimiento realizado por el jugador humano se coloque bien en el tablero
+        """
         jugadorTest = jugador.JugadorHumano("Juan", "X")
         tablero = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 
@@ -22,7 +39,18 @@ class JugadorHumanoTestCase(unittest.TestCase):
 
 
 class JugadorCpuTestCase(unittest.TestCase):
+    """
+    Este case son pruebas para Jugador de tipo CPU
+
+    Tests
+    -----
+    test_constructor()
+        Se prueba que la construccion de un jugador CPU funcione bien asignandole valores especificos
+    """
     def test_constructor(self):
+        """
+        Se prueba que la construccion de un jugador CPU funcione bien asignandole valores especificos
+        """
         jugadorTest = jugador.JugadorCPU("X", 1)
         self.assertEqual("CPU", jugadorTest.nombre)
         self.assertEqual("X", jugadorTest.letra)

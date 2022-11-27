@@ -2,6 +2,7 @@ from src import dificultad
 from src import arbol_decisiones
 import random
 
+
 class Jugador:
     """
     Es una superclase para los tipos de jugador existentes
@@ -87,14 +88,12 @@ class JugadorHumano(Jugador):
         # posicionIngresada = int(input("Ingrese la posicion que quiere ingresar (1-9): "))
         # print("Ingrese la posicion que quiere ingresar (1-9): ")
         # posicionIngresada = dibujador.Dibujador.getPosicion()
-        if tablero[posicionIngresada-1] != ' ':
+        if tablero[posicionIngresada - 1] != ' ':
             print("Posicion ya tiene una letra")
             return False
         else:
-            tablero[posicionIngresada-1] = self.letra
+            tablero[posicionIngresada - 1] = self.letra
             return True
-
-
 
 
 class JugadorCPU(Jugador):
@@ -117,6 +116,7 @@ class JugadorCPU(Jugador):
     movida(tablero)
         Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
     """
+
     def __init__(self, letra, dificultadNueva):
         super().__init__('CPU', letra)
         self.dificultadCPU = dificultadNueva
@@ -149,6 +149,8 @@ class JugadorCPU(Jugador):
                     tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
                     break
         elif self.dificultadCPU is dificultad.Dificultad.normal:
+            if self.arbol is not None:
+                self.arbol.cambiarRaizA(tablero)
             if random.randint(1,2) == 1:
                 while True:
                     posicionIngresada = random.randint(0, 8)
@@ -159,8 +161,6 @@ class JugadorCPU(Jugador):
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                else:
-                    self.arbol.cambiarRaizA(tablero)
                 tableroNuevo = self.arbol.minimax()
         elif self.dificultadCPU is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
@@ -170,7 +170,8 @@ class JugadorCPU(Jugador):
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                else: self.arbol.cambiarRaizA(tablero)
+                else:
+                    self.arbol.cambiarRaizA(tablero)
                 tableroNuevo = self.arbol.minimax()
         elif self.dificultadCPU is dificultad.Dificultad.imposible:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
@@ -180,7 +181,8 @@ class JugadorCPU(Jugador):
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                else: self.arbol.cambiarRaizAImposible(tablero)
+                else:
+                    self.arbol.cambiarRaizAImposible(tablero)
                 self.arbol.minimaxImposible()
                 tableroNuevo = self.arbol.raiz.valor
         return tableroNuevo
