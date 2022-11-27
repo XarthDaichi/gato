@@ -230,6 +230,8 @@ class ArbolDecisiones:
         tablero:list
             El tablero del juego
         """
+        if self.raiz.tablero == tablero:
+            return self.raiz
         if self.raiz.siguientes is not None:
             for posibleCambio in self.raiz.siguientes:
                 if posibleCambio.tablero == tablero:

@@ -96,6 +96,8 @@ class JugadorHumano(Jugador):
             return True
 
 
+
+
 class JugadorCPU(Jugador):
     """
     Hereda de la superclase Jugador y se utiliza para un CPU
@@ -116,7 +118,7 @@ class JugadorCPU(Jugador):
     movida(tablero)
         Determina la movida a realizar del CPU de acuerdo con su dificultad y devuelve el tablero actualizado
     """
-
+    contadorParaNormal = 0
     def __init__(self, letra, dificultadNueva):
         super().__init__('CPU', letra)
         self.dificultadCPU = dificultadNueva
@@ -151,17 +153,21 @@ class JugadorCPU(Jugador):
         elif self.dificultadCPU is dificultad.Dificultad.normal:
             if self.arbol is not None:
                 self.arbol.cambiarRaizA(tablero)
-            if random.randint(1,2) == 1:
+            if JugadorCPU.contadorParaNormal % 2 == 0:
                 while True:
                     posicionIngresada = random.randint(0, 8)
                     if tablero[posicionIngresada] == ' ':
                         tableroNuevo = tablero[:posicionIngresada] + [self.letra] + tablero[posicionIngresada + 1:]
+                        JugadorCPU.contadorParaNormal += 1
+                        if self.arbol is not None:
+                            self.arbol.cambiarRaizA(tablero)
                         break
             else:
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
                 tableroNuevo = self.arbol.minimax()
+                JugadorCPU.contadorParaNormal += 1
         elif self.dificultadCPU is dificultad.Dificultad.dificil:
             if tablero == [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']:
                 posicionIngresada = random.choice([0, 2, 4, 6, 8])
