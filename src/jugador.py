@@ -124,7 +124,7 @@ class JugadorCPU(Jugador):
         self.dificultadCPU = dificultadNueva
         self.arbol = None
 
-    def __init__(self, letra="", dificultadNueva=1, nombre="CPU"):
+    def __init__(self, letra="", dificultadNueva=dificultad.Dificultad.facil, nombre="CPU"):
         super().__init__(nombre, letra)
         self.dificultadCPU = dificultadNueva
         self.arbol = None
