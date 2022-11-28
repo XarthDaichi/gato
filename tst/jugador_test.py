@@ -1,5 +1,6 @@
 import unittest
 from src import jugador
+from src import dificultad
 
 
 class JugadorHumanoTestCase(unittest.TestCase):
@@ -55,6 +56,13 @@ class JugadorCpuTestCase(unittest.TestCase):
         self.assertEqual("CPU", jugadorTest.nombre)
         self.assertEqual("X", jugadorTest.letra)
         self.assertEqual(1, jugadorTest.dificultadCPU)
+
+    def test_movida(self):
+        tablero = ['O', 'X', 'X', 'X', 'O', 'O', ' ', 'X', ' ']
+        jugadorTest = jugador.JugadorCPU('O', dificultad.Dificultad.dificil)
+        jugadorTest.movida(tablero)
+
+        self.assertEqual(['O', 'X', 'X', 'X', 'O', 'O', ' ', 'X', 'O'], jugadorTest.movida(tablero))
 
 
 if __name__ == '__main__':
