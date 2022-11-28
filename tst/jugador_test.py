@@ -47,6 +47,10 @@ class JugadorCpuTestCase(unittest.TestCase):
     -----
     test_constructor()
         Se prueba que la construccion de un jugador CPU funcione bien asignandole valores especificos
+
+    test_movida()
+        Se prueba que el movimiento realizado por un CPU dificil haga el movimiento ganador en un tablero donde
+        existe posibilidad de que el gane
     """
     def test_constructor(self):
         """
@@ -58,6 +62,10 @@ class JugadorCpuTestCase(unittest.TestCase):
         self.assertEqual(1, jugadorTest.dificultadCPU)
 
     def test_movida(self):
+        """
+            Se prueba que el movimiento realizado por un CPU dificil haga el movimiento ganador en un tablero donde
+            existe posibilidad de que el gane
+        """
         tablero = ['O', 'X', 'X', 'X', 'O', 'O', ' ', 'X', ' ']
         jugadorTest = jugador.JugadorCPU('O', dificultad.Dificultad.dificil)
 
