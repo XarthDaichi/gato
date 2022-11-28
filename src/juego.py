@@ -128,7 +128,7 @@ class Juego:
         """
         while not self.turnos.empty():
             self.turnos.get()
-        jugador.JugadorCPU = 0
+        jugador.JugadorCPU.contadorParaNormal = 0
         self.dibujador.terminaJuego(ganador)
         if ganador is not None:
             print('Gana ', ganador.nombre, '(', ganador.letra, ')!!!!!')
