@@ -60,7 +60,6 @@ class JugadorCpuTestCase(unittest.TestCase):
     def test_movida(self):
         tablero = ['O', 'X', 'X', 'X', 'O', 'O', ' ', 'X', ' ']
         jugadorTest = jugador.JugadorCPU('O', dificultad.Dificultad.dificil)
-        jugadorTest.movida(tablero)
 
         self.assertEqual(['O', 'X', 'X', 'X', 'O', 'O', ' ', 'X', 'O'], jugadorTest.movida(tablero))
 
