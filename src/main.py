@@ -1,5 +1,6 @@
 import jugador as player
 import juego as game
+import dificultad as dif
 from gui import dibujador
 from gui import instruccion as inst
 
@@ -26,3 +27,8 @@ if __name__ == '__main__':
                 elJuego.comenzar(gui)
         elif instruccion is inst.Instruccion.quit:
             break
+
+    # testCPU1 = player.JugadorCPU('X', gui.pedirDificultad(), 'CPU Dificil')
+    # testCPU2 = player.JugadorCPU('O', gui.pedirDificultad(), 'CPU Imposible')
+    # testJuego = game.Juego(testCPU1, testCPU2)
+    # testJuego.comenzar(gui)

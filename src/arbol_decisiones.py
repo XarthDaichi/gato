@@ -1,4 +1,5 @@
 import math
+import queue
 
 class Nodo:
     """
@@ -170,6 +171,7 @@ class ArbolDecisiones:
         """
         nuevoValor = self._minimax(self.raiz, self.letraCPU)[1]
         self.cambiarRaizAImposible(nuevoValor)
+        return nuevoValor
 
     def _minimax(self, tempRaiz, letra):
         """
@@ -221,7 +223,11 @@ class ArbolDecisiones:
         """
         Es el wrapper del metodo _cambiarRaizA
         """
-        self.raiz = self._cambiarRaizA(tablero)
+        nuevaRaiz = self._cambiarRaizA(tablero)
+        if nuevaRaiz is not None:
+            self.raiz = nuevaRaiz
+        else:
+            self._generarArbol(self.letraCPU, tablero)
 
     def _cambiarRaizA(self, tablero):
         """
@@ -243,19 +249,39 @@ class ArbolDecisiones:
         """
         Es el wrapper del metodo _cambiarRaizAImposible
         """
-        self._cambiarRaizAImposible(self.raiz, tablero)
+        nuevaRaiz = self._cambiarRaizAImposible(tablero)
+        if nuevaRaiz is not None:
+            self.raiz = nuevaRaiz
 
-    def _cambiarRaizAImposible(self, tempRaiz, tablero):
+    def _cambiarRaizAImposible(self, tablero):
         """
         Una variacion del metodo cambiarRaizA()
         """
-        if tempRaiz.tablero is tablero:
-            self.raiz = tempRaiz
-            return True
-        if tempRaiz is None:
-            return False
-        if tempRaiz.siguientes is not None:
-            for posibleCambio in tempRaiz.siguientes:
-                if self._cambiarRaizAImposible(posibleCambio, tablero):
-                    return True
-        return False
+        # if tempRaiz.tablero is tablero:
+        #     self.raiz = tempRaiz
+        #     return True
+        # if tempRaiz is None:
+        #     return False
+        # if tempRaiz.siguientes is not None:
+        #     for posibleCambio in tempRaiz.siguientes:
+        #         if self._cambiarRaizAImposible(posibleCambio, tablero):
+        #             return True
+        # return False
+
+        if self.raiz.tablero == tablero:
+            return self.raiz
+
+        que = queue.Queue()
+        if self.raiz is not None and self.raiz.siguientes is not None:
+            for siguiente in self.raiz.siguientes:
+                que.put(siguiente)
+
+        while not que.empty():
+            tempNodo = que.get()
+            if tempNodo.tablero == tablero:
+                return tempNodo
+
+            if tempNodo.siguientes is not None:
+                for siguiente in tempNodo.siguientes:
+                    que.put(siguiente)
+

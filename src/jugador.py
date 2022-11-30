@@ -187,8 +187,5 @@ class JugadorCPU(Jugador):
                 if self.arbol is None:
                     self.arbol = arbol_decisiones.ArbolDecisiones()
                     self.arbol.generarArbol(self.letra, tablero)
-                else:
-                    self.arbol.cambiarRaizAImposible(tablero)
-                self.arbol.minimaxImposible()
-                tableroNuevo = self.arbol.raiz.valor
+                tableroNuevo = self.arbol.minimaxImposible()
         return tableroNuevo
