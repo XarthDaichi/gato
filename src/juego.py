@@ -2,6 +2,7 @@ import random
 import queue
 import jugador
 from gui import dibujador as dib
+from src import dificultad
 
 
 class Juego:
@@ -105,16 +106,23 @@ class Juego:
         print(self.tablero[6], ' | ', self.tablero[7], ' | ', self.tablero[8])
         print("\n\n\n")
 
-        if not self._determinarGanador() and self._tableroTieneVacios():
-            self.turnos.put(jugadorDeTurno)
-            self.turno()
-        elif not self._tableroTieneVacios():
-            if not self._determinarGanador():
-                self.terminarJuego(None)
+        nextJugador = self.turnos.get()
+        if (type(jugadorDeTurno) == jugador.JugadorCPU) or (type(jugadorDeTurno) != jugador.JugadorCPU and nextJugador.getDificultad() != dificultad.Dificultad.imposible):
+            if not self._determinarGanador() and self._tableroTieneVacios():
+                self.turnos.put(nextJugador)
+                self.turnos.put(jugadorDeTurno)
+                self.turno()
+            elif not self._tableroTieneVacios():
+                if not self._determinarGanador():
+                    self.terminarJuego(None)
+                else:
+                    self.terminarJuego(jugadorDeTurno)
             else:
                 self.terminarJuego(jugadorDeTurno)
         else:
-            self.terminarJuego(jugadorDeTurno)
+            self.turnos.put(nextJugador)
+            self.turnos.put(jugadorDeTurno)
+            self.turno()
 
     def terminarJuego(self, ganador):
         """
