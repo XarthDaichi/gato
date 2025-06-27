@@ -189,3 +189,6 @@ class JugadorCPU(Jugador):
                     self.arbol.generarArbol(self.letra, tablero)
                 tableroNuevo = self.arbol.minimaxImposible()
         return tableroNuevo
+
+    def getDificultad(self):
+        return self.dificultadCPU
